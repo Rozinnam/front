@@ -25,20 +25,6 @@ public class FileAdaptor {
     public void fileUpload(MultipartFile file) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultipartFile> requestEntity = new HttpEntity<>(file, headers);
-
-        restTemplate.exchange(
-                backAdaptorProperties.getAddress() + URL,
-                HttpMethod.POST,
-                requestEntity,
-                new ParameterizedTypeReference<> () {}
-        );
-    }
-
-    /*
-    public void fileUpload(MultipartFile file) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         try {
@@ -63,5 +49,4 @@ public class FileAdaptor {
                 new ParameterizedTypeReference<>() {}
         );
     }
-    */
 }
