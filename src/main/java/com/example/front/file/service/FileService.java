@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileService {
     private final FileAdaptor fileAdaptor;
 
-    public boolean fileUpload(MultipartFile file) {
-        fileAdaptor.fileUpload(file);
+    public boolean fileUpload(MultipartFile[] files) {
+        fileAdaptor.fileUpload(files);
 
         return true;
     }

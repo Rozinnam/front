@@ -1,6 +1,7 @@
 package com.example.front.file.adaptor;
 
 import com.example.front.config.BackAdaptorProperties;
+import com.example.front.file.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,20 +23,22 @@ public class FileAdaptor {
     private final BackAdaptorProperties backAdaptorProperties;
     private static final String URL = "/api/file";
 
-    public void fileUpload(MultipartFile file) {
+    public void fileUpload(MultipartFile[] files) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         try {
-            body.add("file", new ByteArrayResource(file.getBytes()) {
-                @Override
-                public String getFilename() {
-                    return file.getOriginalFilename();
-                }
-            });
+            for (MultipartFile file : files) {
+                body.add("files", new ByteArrayResource(file.getBytes()) {
+                    @Override
+                    public String getFilename() {
+                        return file.getOriginalFilename();
+                    }
+                });
+            }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UnExpectedStateException(e);
         }
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity =
