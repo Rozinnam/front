@@ -1,19 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>파일 업로드</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .responsive-logo {
+            top: 10%;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .responsive-logo img {
+            max-width: 200px;
+            width: 50%;
+            height: auto;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            color: #fff;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #fff;
+            color: #000;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .responsive-logo img {
+                max-width: 100px;
+            }
+
+            input[type="file"] {
+                width: 80%;
+            }
+        }
+    </style>
 </head>
 <body>
-<form method="post" action="upload" enctype="multipart/form-data">
-    <div>
-        file : <input type="file" name="files" multiple id="fileInput">
-    </div>
-    <div>
-        <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
-    </div>
-    <input type="submit">
-</form>
+<div class="responsive-logo">
+    <img src="/logo.jpg" alt="Logo">
+</div>
+
+<div class="upload-section">
+    <h2>자동차 손상 사진을 골라주세요</h2>
+    <form method="post" action="upload" enctype="multipart/form-data">
+        <div>
+            <input type="file" name="files" multiple id="fileInput">
+        </div>
+        <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+    </form>
+</div>
+<div>
+    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+</div>
 
 <script>
     document.getElementById("fileInput").addEventListener("change", function (event) {
@@ -48,6 +119,5 @@
         }
     });
 </script>
-
 </body>
 </html>
