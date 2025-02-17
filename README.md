@@ -1,1 +1,1 @@
-front server
+프론트 서버입니다.
