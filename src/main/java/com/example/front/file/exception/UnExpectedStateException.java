@@ -1,4 +1,4 @@
-package com.example.front.file;
+package com.example.front.file.exception;
 
 import lombok.extern.slf4j.Slf4j;
 
