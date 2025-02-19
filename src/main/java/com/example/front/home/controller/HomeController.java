@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
@@ -20,7 +22,7 @@ public class HomeController {
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("files") MultipartFile[] files, Model model) {
+    public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
         String message = fileService.fileUpload(files) ? "success" : "fail";
         model.addAttribute("message", message);
 
