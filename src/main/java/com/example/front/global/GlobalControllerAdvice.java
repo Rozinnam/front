@@ -15,7 +15,7 @@ public class GlobalControllerAdvice {
         return "/user/home";
     }
 
-    @ExceptionHandler(UnExpectedStateException.class)
+    @ExceptionHandler({UnExpectedStateException.class, RuntimeException.class})
     public String handleUnExpectedStateException(Model model) {
         model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요./");
 
