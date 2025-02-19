@@ -4,7 +4,6 @@ import com.example.front.config.BackAdaptorProperties;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -22,16 +21,16 @@ import java.util.List;
 public class FileAdaptor {
     private final RestTemplate restTemplate;
     private final BackAdaptorProperties backAdaptorProperties;
-    private static final String URL = "/api/file";
+    private static final String URL = "/api/";
 
-    public void fileUpload(List<MultipartFile> files) {
+    public String fileUpload(List<MultipartFile> files) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         try {
             for (MultipartFile file : files) {
-                body.add("files", new ByteArrayResource(file.getBytes()) {
+                body.add("file", new ByteArrayResource(file.getBytes()) {
                     @Override
                     public String getFilename() {
                         return file.getOriginalFilename();
@@ -45,12 +44,19 @@ public class FileAdaptor {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress() + URL).build().toUri();
 
-        restTemplate.exchange(
+        log.info("url : " + uri);
+
+        ResponseEntity<String> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 requestEntity,
-                new ParameterizedTypeReference<>() {
-                }
+                String.class
         );
+
+        if (exchange.getStatusCode() != HttpStatus.OK) {
+            throw new IllegalStateException();
+        }
+
+        return exchange.getBody();
     }
 }

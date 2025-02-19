@@ -23,8 +23,7 @@ public class HomeController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
-        String message = fileService.fileUpload(files) ? "success" : "fail";
-        model.addAttribute("message", message);
+        model.addAttribute("errorMessage", fileService.fileUpload(files));
 
         return "/user/home";
     }

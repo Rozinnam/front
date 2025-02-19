@@ -15,7 +15,7 @@ public class FileService {
     private final FileAdaptor fileAdaptor;
     private final FileUtils fileUtils;
 
-    public boolean fileUpload(List<MultipartFile> files) {
+    public String fileUpload(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
         }
@@ -26,7 +26,6 @@ public class FileService {
             }
         }
 
-        fileAdaptor.fileUpload(files);
-        return true;
+        return fileAdaptor.fileUpload(files);
     }
 }
