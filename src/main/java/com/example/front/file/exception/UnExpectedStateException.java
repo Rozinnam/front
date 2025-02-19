@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UnExpectedStateException extends RuntimeException {
     public UnExpectedStateException(Exception e) {
-        log.info(e.getMessage());
+        super(e);
+        log.error("예상치 못한 상태 발생", e);
     }
 }
