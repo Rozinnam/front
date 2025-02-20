@@ -1,6 +1,7 @@
 package com.example.front.global;
 
 import com.example.front.config.FileProperties;
+import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,6 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(HttpClientErrorException.class)
     public String handleClientException(HttpClientErrorException e, Model model) {
         model.addAttribute("errorMessage", e.getResponseBodyAsString());
-
-        return "/user/home";
-    }
-
-    @ExceptionHandler({UnExpectedStateException.class, RuntimeException.class})
-    public String handleUnExpectedStateException(Model model) {
-        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요./");
 
         return "/user/home";
     }
@@ -54,6 +48,20 @@ public class GlobalControllerAdvice {
         } else {
             model.addAttribute("errorMessage", "파일 업로드 중 알 수 없는 오류가 발생했습니다.");
         }
+
+        return "/user/home";
+    }
+
+    @ExceptionHandler(FileEmptyException.class)
+    public String handlerFileEmptyException(FileEmptyException e, Model model) {
+        model.addAttribute("errorMessage", "파일을 선택해 주세요.");
+
+        return "/user/home";
+    }
+
+    @ExceptionHandler({UnExpectedStateException.class, Exception.class})
+    public String handleUnExpectedStateException(Model model) {
+        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요./");
 
         return "/user/home";
     }
