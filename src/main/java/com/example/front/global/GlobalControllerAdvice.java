@@ -49,7 +49,8 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(FileEmptyException.class)
     public String handlerFileEmptyException(FileEmptyException e, Model model) {
-        model.addAttribute("errorMessage", "파일을 선택해 주세요.");
+        model.addAttribute("errorMessage", "업로드할 파일을 선택해 주세요.\n" +
+                "파일 선택 버튼을 클릭하여 파일을 추가하실 수 있습니다.");
 
         return "/user/home";
     }
@@ -57,7 +58,8 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(UnExpectedStateException.class)
     public String handleUnExpectedStateException(Exception e, Model model) {
         log.error("예기치 못한 에러 발생", e);
-        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n관리자에게 문의해주세요.");
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "/user/home";
     }
@@ -65,7 +67,8 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, Model model) {
         log.error("처리 되지 않은 예외 발생", e);
-        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n관리자에게 문의해주세요.");
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "/user/home";
     }
