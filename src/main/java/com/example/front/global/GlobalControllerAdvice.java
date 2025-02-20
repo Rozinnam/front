@@ -5,6 +5,7 @@ import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
+@Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalControllerAdvice {
@@ -60,8 +62,9 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler({UnExpectedStateException.class, Exception.class})
-    public String handleUnExpectedStateException(Model model) {
-        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요./");
+    public String handleUnExpectedStateException(Exception e, Model model) {
+        log.error("예기치 못한 에러 발생", e);
+        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요.");
 
         return "/user/home";
     }
