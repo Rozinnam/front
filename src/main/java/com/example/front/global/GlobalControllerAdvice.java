@@ -19,13 +19,6 @@ import org.springframework.web.multipart.MultipartException;
 public class GlobalControllerAdvice {
     private final FileProperties fileProperties;
 
-    @ExceptionHandler(HttpClientErrorException.class)
-    public String handleClientException(HttpClientErrorException e, Model model) {
-        model.addAttribute("errorMessage", e.getResponseBodyAsString());
-
-        return "/user/home";
-    }
-
     @ExceptionHandler(FileUnsupportedFormatException.class)
     public String fileUnsupportedFormatException(Model model) {
         model.addAttribute("errorMessage", "지원되지 않는 파일 형식입니다.\n지원 파일 형식: "
@@ -61,10 +54,18 @@ public class GlobalControllerAdvice {
         return "/user/home";
     }
 
-    @ExceptionHandler({UnExpectedStateException.class, Exception.class})
+    @ExceptionHandler(UnExpectedStateException.class)
     public String handleUnExpectedStateException(Exception e, Model model) {
         log.error("예기치 못한 에러 발생", e);
-        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n 관리자에게 문의해주세요.");
+        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n관리자에게 문의해주세요.");
+
+        return "/user/home";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception e, Model model) {
+        log.error("처리 되지 않은 예외 발생", e);
+        model.addAttribute("errorMessage", "예기치 못한 에러가 발생했습니다.\n관리자에게 문의해주세요.");
 
         return "/user/home";
     }
