@@ -71,11 +71,10 @@ jobs:
       - name: Add GitHub Actions Runner IP to Security Group
         run: |
           MY_IP=$(curl -s https://checkip.amazonaws.com)
-          echo "Current Runner IP is ${MY_IP}"
           aws ec2 authorize-security-group-ingress \
+            --port ${{ secrets.SSH_PORT }} \
             --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} \
             --protocol tcp \
-            --port ${{ secrets.SSH_PORT }} \
             --cidr ${MY_IP}/32
 
       # SSH를 통해 EC2에 접근하여 배포 수행
