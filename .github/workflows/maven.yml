@@ -53,6 +53,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # .env 파일 생성
+      - name: Create .env file
+        run: |
+          echo "DB_HOST=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" >> .env
+
+      # AWS 자격 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
