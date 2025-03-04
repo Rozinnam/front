@@ -18,13 +18,13 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "/user/home";
+        return "user/home";
     }
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
         model.addAttribute("errorMessage", fileService.fileUpload(files));
 
-        return "/user/home";
+        return "user/home";
     }
 }
