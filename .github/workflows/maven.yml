@@ -51,6 +51,7 @@ jobs:
       
   deploy:
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       # .env 파일 생성
