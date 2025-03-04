@@ -94,8 +94,8 @@ jobs:
             sudo docker stop front || true
             sudo docker rm front || true
             
-            # 새 컨테이너 실행
-            sudo docker run --env-file .env -d -p 80:8080 --name front damho/front:latest
+            # 새 컨테이너 실행, 80 port nginx 사용중
+            sudo docker run --env-file .env -d -p 81:8080 --name front damho/front:latest
 
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
