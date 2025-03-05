@@ -88,6 +88,7 @@ jobs:
           port: ${{ secrets.SSH_PORT}}
           script_stop: true
           script: |
+            pwd;
             sudo docker pull damho/front:latest
             
             # 기존 컨테이너 중지 및 제거
