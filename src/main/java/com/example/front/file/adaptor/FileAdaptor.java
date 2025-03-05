@@ -21,7 +21,7 @@ import java.util.List;
 public class FileAdaptor {
     private final RestTemplate restTemplate;
     private final BackAdaptorProperties backAdaptorProperties;
-    private static final String URL = "/api/";
+    private static final String URL = "/predict";
 
     public String fileUpload(List<MultipartFile> files) {
         HttpHeaders headers = new HttpHeaders();
@@ -43,8 +43,6 @@ public class FileAdaptor {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress() + URL).build().toUri();
-
-        log.info("url : " + uri);
 
         ResponseEntity<String> exchange = restTemplate.exchange(
                 uri,
