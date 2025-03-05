@@ -54,6 +54,10 @@ jobs:
     needs: build
 
     steps:
+      # 현재 작업 디렉토리
+      - name: Print current working directory
+        run: pwd
+
       # .env 파일 생성
       - name: Create .env file
         run: |
