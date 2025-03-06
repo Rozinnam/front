@@ -2,3 +2,4 @@
 
 [2025-02-28]
 Nginx SSL 실패 : http -> https Redirect 안됨
+해결(2025-03-02)
