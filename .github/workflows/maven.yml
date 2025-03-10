@@ -96,7 +96,7 @@ jobs:
             sudo docker rm front || true
             
             # 새 컨테이너 실행
-            sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest
+            sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
 
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
