@@ -103,7 +103,6 @@ jobs:
             sudo docker stop front || true
             sudo docker rm front || true
             
-      #      sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
             sudo docker run --env-file /home/${{ secrets.EC2_USERNAME }}/.env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
