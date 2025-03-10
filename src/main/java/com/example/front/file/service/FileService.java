@@ -5,10 +5,12 @@ import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.file.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -22,6 +24,7 @@ public class FileService {
 
         for (MultipartFile file : files) {
             if (!fileUtils.isValidMimeType(file)) {
+                log.info("\n\nfileName : " + file.getOriginalFilename() + "\n\n");
                 throw new FileUnsupportedFormatException();
             }
         }
