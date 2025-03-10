@@ -46,6 +46,8 @@ public class FileAdaptor {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress() + URL).build().toUri();
 
+        log.info("\n\nURI : " + uri + "\n\n");
+
         ResponseEntity<String> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
