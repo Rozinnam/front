@@ -25,7 +25,7 @@ public class HomeController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
-        log.trace("\n\nController, FileName : " + files.get(0).getOriginalFilename() + "\n\n");
+        log.info("\n\nController, FileName : " + files.get(0).getOriginalFilename() + "\n\n");
         model.addAttribute("errorMessage", fileService.fileUpload(files));
 
         return "user/home";
