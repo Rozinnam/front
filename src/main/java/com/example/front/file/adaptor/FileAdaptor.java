@@ -30,8 +30,6 @@ public class FileAdaptor {
 
         try {
             for (MultipartFile file : files) {
-                log.info("\n\nAdaptor, FileName : " + file.getOriginalFilename() + "\n\n");
-
                 body.add("image", new ByteArrayResource(file.getBytes()) {
                     @Override
                     public String getFilename() {
@@ -46,8 +44,6 @@ public class FileAdaptor {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress() + URL).build().toUri();
 
-        log.info("\n\nURI : " + uri + "\n\n");
-
         ResponseEntity<String> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
@@ -59,6 +55,7 @@ public class FileAdaptor {
             throw new IllegalStateException();
         }
 
+        log.info("\n\nResult : " + exchange.getBody() + " \n\n");
         return exchange.getBody();
     }
 }
