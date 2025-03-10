@@ -59,6 +59,17 @@ jobs:
         run: |
           echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > .env
 
+      # .env 파일을 EC2에 전송
+      - name: Copy .env file to EC2
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: .env
+          target: /home/${{ secrets.EC2_USERNAME }}/.env
+
       # AWS 자격 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -92,8 +103,8 @@ jobs:
             sudo docker stop front || true
             sudo docker rm front || true
             
-            sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
-
+      #      sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
+            sudo docker run --env-file /home/${{ secrets.EC2_USERNAME }}/.env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
         run: |
