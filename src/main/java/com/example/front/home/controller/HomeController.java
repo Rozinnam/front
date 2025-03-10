@@ -2,6 +2,7 @@ package com.example.front.home.controller;
 
 import com.example.front.file.service.FileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
@@ -23,6 +25,7 @@ public class HomeController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
+        log.info("\n\nController, FileName : " + files.get(0).getOriginalFilename() + "\n\n");
         model.addAttribute("errorMessage", fileService.fileUpload(files));
 
         return "user/home";
