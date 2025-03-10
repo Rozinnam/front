@@ -88,14 +88,11 @@ jobs:
           port: ${{ secrets.SSH_PORT}}
           script_stop: true
           script: |
-            pwd;
             sudo docker pull damho/front:latest
             
-            # 기존 컨테이너 중지 및 제거
             sudo docker stop front || true
             sudo docker rm front || true
             
-            # 새 컨테이너 실행
             sudo docker run --env-file .env -d -p 8080:8080 --name front damho/front:latest --network dockernetwork
 
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
