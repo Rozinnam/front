@@ -23,8 +23,6 @@ public class FileService {
         }
 
         for (MultipartFile file : files) {
-            log.info("\n\nService, FileName : " + file.getOriginalFilename() + "\n\n");
-
             if (!fileUtils.isValidMimeType(file)) {
                 throw new FileUnsupportedFormatException();
             }

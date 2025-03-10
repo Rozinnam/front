@@ -30,8 +30,6 @@ public class FileAdaptor {
 
         try {
             for (MultipartFile file : files) {
-                log.info("\n\nAdaptor, FileName : " + file.getOriginalFilename() + "\n\n");
-
                 body.add("image", new ByteArrayResource(file.getBytes()) {
                     @Override
                     public String getFilename() {
@@ -57,6 +55,7 @@ public class FileAdaptor {
             throw new IllegalStateException();
         }
 
+        log.info("\n\nResult : " + exchange.getBody() + " \n\n");
         return exchange.getBody();
     }
 }

@@ -57,7 +57,7 @@ jobs:
       # .env 파일 생성
       - name: Create .env file
         run: |
-          echo "AI_Model_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" >> .env
+          echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" >> .env
 
       # AWS 자격 설정
       - name: Configure AWS credentials
