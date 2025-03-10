@@ -30,7 +30,7 @@ public class FileAdaptor {
 
         try {
             for (MultipartFile file : files) {
-                body.add("file", new ByteArrayResource(file.getBytes()) {
+                body.add("image", new ByteArrayResource(file.getBytes()) {
                     @Override
                     public String getFilename() {
                         return file.getOriginalFilename();
