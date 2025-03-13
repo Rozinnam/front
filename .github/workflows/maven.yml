@@ -55,9 +55,9 @@ jobs:
 
     steps:
       # .env 파일 생성
-      - name: Create .env file
-        run: |
-          echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > .env
+      #- name: Create .env file
+      #  run: |
+      #    echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > .env
 
       # AWS 자격 설정
       - name: Configure AWS credentials
@@ -87,6 +87,8 @@ jobs:
           port: ${{ secrets.SSH_PORT}}
           script_stop: true
           script: |
+            echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > /home/${{ secrets.EC2_USERNAME }}/.env
+            
             sudo docker pull damho/front:latest
             
             sudo docker stop front || true
