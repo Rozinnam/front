@@ -3,7 +3,6 @@ package com.example.front.file.adaptor;
 import com.example.front.config.BackAdaptorProperties;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileAdaptor {
@@ -44,7 +42,6 @@ public class FileAdaptor {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         URI uri = UriComponentsBuilder.fromUriString(SCHEME + backAdaptorProperties.getAddress() + URL).build().toUri();
-        log.info("\n\nURI : " + uri + "\n\n");
 
         ResponseEntity<String> exchange = restTemplate.exchange(
                 uri,
@@ -56,8 +53,7 @@ public class FileAdaptor {
         if (exchange.getStatusCode() != HttpStatus.OK) {
             throw new IllegalStateException();
         }
-
-        log.info("\n\nResult : " + exchange.getBody() + " \n\n");
+        
         return exchange.getBody();
     }
 }
