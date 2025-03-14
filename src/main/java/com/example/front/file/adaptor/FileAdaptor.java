@@ -53,7 +53,7 @@ public class FileAdaptor {
         if (exchange.getStatusCode() != HttpStatus.OK) {
             throw new IllegalStateException();
         }
-        
+
         return exchange.getBody();
     }
 }
