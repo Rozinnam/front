@@ -6,3 +6,6 @@ Nginx SSL 실패 : http -> https Redirect 안됨
 
 [2025-03-11]
 AI Model Server와 Front 서버 통신 확인
+
+[2025-03-17]
+결과창 만들기
