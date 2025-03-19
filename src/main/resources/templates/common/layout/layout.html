@@ -12,10 +12,8 @@
     <title>끼이익</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-light">
-<!-- 헤더 영역 -->
 <header th:replace="common/fragment/header/header :: HeaderFragment"></header>
-
+<body class="bg-light">
 <!-- 본문 영역 -->
 <main class="p-6 pt-5">
     <th:block layout:fragment="content"></th:block>
