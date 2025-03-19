@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <th:block th:replace="layout/base :: head(title='결과 대기', script='')"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/my-books-layout}">
+
+<div fragment="content">
     <style>
-        body {
+        .main-container {
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -49,54 +48,57 @@
             }
         }
     </style>
-</head>
-<body>
 
-<div class="upload-section">
-    <h2>자동차 손상 사진을 골라주세요</h2>
-    <form method="post" action="upload" enctype="multipart/form-data">
-        <div>
-            <input type="file" name="files" multiple id="fileInput">
+    <div class="main-container">
+        <div class="upload-section">
+            <h2>자동차 손상 사진을 골라주세요</h2>
+            <form method="post" action="upload" enctype="multipart/form-data">
+                <div>
+                    <input type="file" name="files" multiple id="fileInput">
+                </div>
+                <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+            </form>
         </div>
-        <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
-    </form>
+
+        <div>
+            <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+        </div>
+
+        <script>
+            document.getElementById("fileInput").addEventListener("change", function (event) {
+                const files = event.target.files;
+                const errorText = document.getElementById("errorText");
+                const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const MAX_FILE_COUNT = 10;
+                const MAX_FILE_SIZE = 10 * 1024 * 1024;
+                const MB = 1024 * 1024;
+                errorText.textContent = ""; // 오류 메시지 초기화
+
+                if (files.length > 10) {
+                    errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
+                    event.target.value = ""; // 파일 선택 초기화
+                    return;
+                }
+
+                for (let file of files) {
+                    console.log(file.type);
+
+                    if (!allowedMimeTypes.includes(file.type)) {
+                        errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
+                        event.target.value = ""; // 파일 선택 초기화
+                        return;
+                    }
+
+                    if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
+                        errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
+                        event.target.value = ""; // 파일 선택 초기화
+                        return;
+                    }
+                }
+            });
+        </script>
+    </div>
 </div>
-<div>
-    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
-</div>
 
-<script>
-    document.getElementById("fileInput").addEventListener("change", function (event) {
-        const files = event.target.files;
-        const errorText = document.getElementById("errorText");
-        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const MAX_FILE_COUNT = 10;
-        const MAX_FILE_SIZE = 10 * 1024 * 1024;
-        const MB = 1024 * 1024;
-        errorText.textContent = ""; // 오류 메시지 초기화
 
-        if (files.length > 10) {
-            errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
-            event.target.value = ""; // 파일 선택 초기화
-            return;
-        }
-
-        for (let file of files) {
-            console.log(file.type);
-
-            if (!allowedMimeTypes.includes(file.type)) {
-                errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
-                event.target.value = ""; // 파일 선택 초기화
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
-                errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
-                event.target.value = ""; // 파일 선택 초기화
-                return;
-            }
-        }
-    });
-</script>
-</body>
 </html>
