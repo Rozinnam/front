@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>파일 업로드</title>
-    <meta charset="UTF-8">
+    <th:block th:replace="layout/base :: head(title='결과 대기', script='')"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
@@ -18,19 +17,6 @@
             background-color: #fff; /* 배경 흰색 */
             color: #000; /* 글씨 검정 */
             font-family: Arial, sans-serif;
-        }
-
-        .responsive-logo {
-            top: 10%;
-            text-align: center;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        .responsive-logo img {
-            max-width: 200px;
-            width: 50%;
-            height: auto;
         }
 
         .upload-section {
@@ -58,10 +44,6 @@
         }
 
         @media (max-width: 600px) {
-            .responsive-logo img {
-                max-width: 100px;
-            }
-
             input[type="file"] {
                 width: 80%;
             }
@@ -69,9 +51,6 @@
     </style>
 </head>
 <body>
-<div class="responsive-logo">
-    <img src="/images/logo.png" alt="Logo">
-</div>
 
 <div class="upload-section">
     <h2>자동차 손상 사진을 골라주세요</h2>
