@@ -4,5 +4,8 @@
 Nginx SSL 실패 : http -> https Redirect 안됨
 해결(2025-03-02)
 
-[2025-03-08]
+[2025-03-11]
 AI Model Server와 Front 서버 통신 확인
+
+[2025-03-19]
+결과창 만들기
