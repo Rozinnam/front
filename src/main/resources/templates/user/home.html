@@ -1,104 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layout/my-books-layout}">
+      layout:decorate="~{common/layout/my-books-layout}"
+      layout:fragment="content">
 
-<div fragment="content">
-    <style>
-        .main-container {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff; /* 배경 흰색 */
-            color: #000; /* 글씨 검정 */
-            font-family: Arial, sans-serif;
-        }
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff; /* 배경 흰색 */
+        color: #000; /* 글씨 검정 */
+        font-family: Arial, sans-serif;
+    }
 
-        .upload-section {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-        }
+    .upload-section {
+        text-align: center;
+        padding: 20px;
+        margin-top: 30px;
+    }
 
+    input[type="file"] {
+        padding: 10px;
+        border: 1px solid #000; /* 테두리 검정 */
+        border-radius: 5px;
+        color: #000; /* 글씨 검정 */
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #000; /* 버튼 배경 검정 */
+        color: #fff; /* 버튼 글씨 흰색 */
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
         input[type="file"] {
-            padding: 10px;
-            border: 1px solid #000; /* 테두리 검정 */
-            border-radius: 5px;
-            color: #000; /* 글씨 검정 */
-            background-color: transparent;
-            cursor: pointer;
+            width: 80%;
         }
+    }
+</style>
 
-        input[type="file"]::-webkit-file-upload-button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #000; /* 버튼 배경 검정 */
-            color: #fff; /* 버튼 글씨 흰색 */
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        @media (max-width: 600px) {
-            input[type="file"] {
-                width: 80%;
-            }
-        }
-    </style>
-
-    <div class="main-container">
-        <div class="upload-section">
-            <h2>자동차 손상 사진을 골라주세요</h2>
-            <form method="post" action="upload" enctype="multipart/form-data">
-                <div>
-                    <input type="file" name="files" multiple id="fileInput">
-                </div>
-                <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
-            </form>
-        </div>
-
+<body>
+<div class="upload-section">
+    <h2>자동차 손상 사진을 골라주세요</h2>
+    <form method="post" action="upload" enctype="multipart/form-data">
         <div>
-            <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+            <input type="file" name="files" multiple id="fileInput">
         </div>
-
-        <script>
-            document.getElementById("fileInput").addEventListener("change", function (event) {
-                const files = event.target.files;
-                const errorText = document.getElementById("errorText");
-                const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                const MAX_FILE_COUNT = 10;
-                const MAX_FILE_SIZE = 10 * 1024 * 1024;
-                const MB = 1024 * 1024;
-                errorText.textContent = ""; // 오류 메시지 초기화
-
-                if (files.length > 10) {
-                    errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
-                    event.target.value = ""; // 파일 선택 초기화
-                    return;
-                }
-
-                for (let file of files) {
-                    console.log(file.type);
-
-                    if (!allowedMimeTypes.includes(file.type)) {
-                        errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
-                        event.target.value = ""; // 파일 선택 초기화
-                        return;
-                    }
-
-                    if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
-                        errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
-                        event.target.value = ""; // 파일 선택 초기화
-                        return;
-                    }
-                }
-            });
-        </script>
-    </div>
+        <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+    </form>
 </div>
 
+<div>
+    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+</div>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        const files = event.target.files;
+        const errorText = document.getElementById("errorText");
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const MAX_FILE_COUNT = 10;
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const MB = 1024 * 1024;
+        errorText.textContent = ""; // 오류 메시지 초기화
+
+        if (files.length > 10) {
+            errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
+            event.target.value = ""; // 파일 선택 초기화
+            return;
+        }
+
+        for (let file of files) {
+            console.log(file.type);
+
+            if (!allowedMimeTypes.includes(file.type)) {
+                errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
+                event.target.value = ""; // 파일 선택 초기화
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
+                errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
+                event.target.value = ""; // 파일 선택 초기화
+                return;
+            }
+        }
+    });
+</script>
+</body>
 
 </html>
