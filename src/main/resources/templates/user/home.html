@@ -18,7 +18,7 @@
     /*    font-family: Arial, sans-serif;*/
     /*}*/
 
-    .upload-section {
+    .center-location {
         text-align: center;
         padding: 20px;
         margin-top: 30px;
@@ -42,6 +42,10 @@
         cursor: pointer;
     }
 
+    .margin-bottom {
+        margin-bottom: 30px;
+    }
+
     @media (max-width: 600px) {
         input[type="file"] {
             width: 80%;
@@ -50,17 +54,23 @@
 </style>
 
 <body>
-<div class="upload-section">
-    <h2>자동차 손상 사진을 골라주세요</h2>
+<div class="center-location">
+    <div class="margin-bottom">
+        <h1>자동차 손상 사진을 골라주세요</h1>
+    </div>
+
     <form method="post" action="upload" enctype="multipart/form-data">
-        <div>
+        <div class="margin-bottom">
             <input type="file" name="files" multiple id="fileInput">
         </div>
-        <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+
+        <div class="margin-bottom">
+            <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+        </div>
     </form>
 </div>
 
-<div>
+<div class ="center-location">
     <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
 </div>
 
