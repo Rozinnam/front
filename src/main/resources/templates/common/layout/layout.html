@@ -11,14 +11,29 @@
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <title>끼이익</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 헤더 색상 변경 */
+        header {
+            background-color: #343a40; /* 어두운 배경 색상 */
+            color: white; /* 텍스트 색상 */
+        }
+
+        /* 본문 색상 변경 */
+        main {
+            background-color: #f8f9fa; /* 밝은 배경 색상 */
+            min-height: 400px; /* 최소 높이 설정 */
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 <!-- 헤더 영역 -->
 <header th:replace="common/fragment/header/header :: HeaderFragment"></header>
 
 <!-- 본문 영역 -->
-<main class="p-6 pt-5">
+<main class="p-6 pt-5 bg-light">
     <th:block layout:fragment="content"></th:block>
 </main>
+
+<footer></footer>
 </body>
 </html>
