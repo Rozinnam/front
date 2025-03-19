@@ -42,6 +42,10 @@
         cursor: pointer;
     }
 
+    .form-group {
+        margin-bottom: 30px;
+    }
+
     @media (max-width: 600px) {
         input[type="file"] {
             width: 80%;
@@ -51,13 +55,20 @@
 
 <body>
 <div class="upload-section">
-    <h2>자동차 손상 사진을 골라주세요</h2>
-    <form method="post" action="upload" enctype="multipart/form-data">
-        <div>
-            <input type="file" name="files" multiple id="fileInput">
-        </div>
-        <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
-    </form>
+    <h1>자동차 손상 사진을 골라주세요</h1>
+
+    <div class="form-group">
+        <form method="post" action="upload" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="files" multiple id="fileInput">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 <div>
