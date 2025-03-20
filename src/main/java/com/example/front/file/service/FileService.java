@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -17,7 +18,7 @@ public class FileService {
     private final FileAdaptor fileAdaptor;
     private final FileUtils fileUtils;
 
-    public String fileUpload(List<MultipartFile> files) {
+    public String communicateWithAiServer(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
         }
@@ -28,6 +29,13 @@ public class FileService {
             }
         }
 
-        return fileAdaptor.fileUpload(files);
+        String taskId = generateTaskId();
+        fileAdaptor.communicateWithAiServer(files, taskId);
+
+        return taskId;
+    }
+
+    private String generateTaskId() {
+        return UUID.randomUUID().toString();
     }
 }
