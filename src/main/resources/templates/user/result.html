@@ -67,8 +67,9 @@
 
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
+        var taskId = document.getElementById("taskId").textContent;
         // 토픽 구독
-        stompClient.subscribe('/topic/result', function (message) {
+        stompClient.subscribe('/topic/result/' + taskId, function (message) {
             const result = message.body;
 
             // 스피너 숨기고 결과 표시
