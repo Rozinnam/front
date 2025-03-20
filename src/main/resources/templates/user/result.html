@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* 스피너 및 결과 스타일 */
+        .spinner {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .spinner div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 8px solid #333;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            border-color: #333 transparent transparent transparent;
+        }
+        .spinner div:nth-child(1) { animation-delay: -0.45s; }
+        .spinner div:nth-child(2) { animation-delay: -0.3s; }
+        .spinner div:nth-child(3) { animation-delay: -0.15s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #result-container {
+            text-align: center;
+            display: none;
+            margin-top: 50px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<!-- 스피너 -->
+<div class="spinner" id="loading-spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<!-- 결과 -->
+<div id="result-container">
+    <h2>결과:</h2>
+    <p id="result-text"></p>
+</div>
+
+<script>
+    // WebSocket 연결 설정
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        // 토픽 구독
+        stompClient.subscribe('/topic/result', function (message) {
+            const result = message.body;
+
+            // 스피너 숨기고 결과 표시
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('result-text').textContent = result;
+        });
+    });
+</script>
+</body>
+</html>
