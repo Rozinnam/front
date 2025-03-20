@@ -22,10 +22,13 @@ public class FileAdaptor {
     private static final String SCHEME = "http://";
     private static final String URL = "/predict";
 
-    public String fileUpload(List<MultipartFile> files) {
+    public void communicateWithAiServer(List<MultipartFile> files, String taskId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        body.add("webhook_url", backAdaptorProperties.getWebhookUrl());
+        body.add("taskId", taskId);
 
         try {
             for (MultipartFile file : files) {
@@ -50,10 +53,8 @@ public class FileAdaptor {
                 String.class
         );
 
-        if (exchange.getStatusCode() != HttpStatus.OK) {
+        if (exchange.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new IllegalStateException();
         }
-
-        return exchange.getBody();
     }
 }
