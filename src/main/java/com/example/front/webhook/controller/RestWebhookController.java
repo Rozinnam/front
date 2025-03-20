@@ -1,0 +1,29 @@
+package com.example.front.webhook.controller;
+
+import com.example.front.file.dto.response.ResponseDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequestMapping("/webhook")
+@RequiredArgsConstructor
+public class RestWebhookController {
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @PostMapping("/result")
+    public ResponseEntity<String> receiveResult(@RequestBody ResponseDto result) {
+        String taskId = result.getTaskId();
+
+        messagingTemplate.convertAndSend("/topic/result/" + taskId, result);
+        log.info("TaskId : {}, Result : {}", taskId, result);
+
+        return ResponseEntity.ok("결과 전송 완료");
+    }
+}
