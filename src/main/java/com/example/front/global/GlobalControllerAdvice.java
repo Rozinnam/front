@@ -10,8 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @ControllerAdvice
@@ -73,12 +77,46 @@ public class GlobalControllerAdvice {
         return "/user/home";
     }
 
+    //RestTemplate 관련 예외
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ModelAndView handleHttpClientError(HttpClientErrorException e) {
+        log.error("HttpClientErrorException 발생 : {}", e.getMessage(), e);
+        ModelAndView mav = new ModelAndView("error/4xx");
+        mav.addObject("status", e.getStatusCode().value());
+        mav.addObject("message", e.getStatusText());
+        mav.addObject("body", e.getResponseBodyAsString());
+
+        return mav;
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ModelAndView handleHttpServerError(HttpServerErrorException e) {
+        log.error("HttpServerErrorException 발생 : {}", e.getMessage(), e);
+        ModelAndView mav = new ModelAndView("error/5xx");
+        mav.addObject("status", e.getStatusCode().value());
+        mav.addObject("message", e.getStatusText());
+
+        return mav;
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ModelAndView handleNetworkError(ResourceAccessException e) {
+        log.error("ResourceAccessException 발생 : {}", e.getMessage(), e);
+        ModelAndView mav = new ModelAndView("error/network");
+        mav.addObject("message", "서버에 연결할 수 없습니다. 네트워크를 확인해주세요.");
+
+        return mav;
+    }
+
+
+    //GenericException
     @ExceptionHandler(Exception.class)
-    public String handleException(Exception e, Model model) {
+    public ModelAndView handleException(Exception e, Model model) {
         log.error("처리 되지 않은 예외 발생", e);
-        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+        ModelAndView mav = new ModelAndView("error/generic");
+        mav.addObject("message", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
-        return "/user/home";
+        return mav;
     }
 }
