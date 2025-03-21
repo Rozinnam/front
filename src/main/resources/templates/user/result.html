@@ -15,6 +15,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
         .spinner div {
             box-sizing: border-box;
             display: block;
@@ -27,13 +28,26 @@
             animation: spin 1.2s linear infinite;
             border-color: #333 transparent transparent transparent;
         }
-        .spinner div:nth-child(1) { animation-delay: -0.45s; }
-        .spinner div:nth-child(2) { animation-delay: -0.3s; }
-        .spinner div:nth-child(3) { animation-delay: -0.15s; }
+
+        .spinner div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+
+        .spinner div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+
+        .spinner div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         #result-container {
@@ -76,6 +90,11 @@
             document.getElementById('loading-spinner').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
             document.getElementById('result-text').textContent = result;
+        }, function (error) {
+            console.error('STOMP 연결 오류:', error);
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('result-text').textContent = '서버 연결 오류가 발생했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
         });
     });
 </script>
