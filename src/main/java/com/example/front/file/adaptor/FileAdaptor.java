@@ -1,6 +1,7 @@
 package com.example.front.file.adaptor;
 
 import com.example.front.config.BackAdaptorProperties;
+import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -55,7 +56,7 @@ public class FileAdaptor {
         );
 
         if (exchange.getStatusCode() != HttpStatus.ACCEPTED) {
-            throw new IllegalStateException("AI 서버와의 통신 실패: 응답 코드" + exchange.getStatusCode() + ", 본문: " + exchange.getBody());
+            throw new AiServerCommunicationException("AI 서버와의 통신 실패: 응답 코드" + exchange.getStatusCode() + ", 본문: " + exchange.getBody(), null);
         }
     }
 }
