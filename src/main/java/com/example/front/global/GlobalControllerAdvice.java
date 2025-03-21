@@ -84,7 +84,6 @@ public class GlobalControllerAdvice {
         ModelAndView mav = new ModelAndView("error/4xx");
         mav.addObject("status", e.getStatusCode().value());
         mav.addObject("message", e.getStatusText());
-        mav.addObject("body", e.getResponseBodyAsString());
 
         return mav;
     }
