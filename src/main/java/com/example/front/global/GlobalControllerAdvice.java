@@ -1,6 +1,7 @@
 package com.example.front.global;
 
 import com.example.front.config.FileProperties;
+import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.file.exception.UnExpectedStateException;
@@ -57,6 +58,15 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(UnExpectedStateException.class)
     public String handleUnExpectedStateException(Exception e, Model model) {
         log.error("예기치 못한 에러 발생", e);
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return "/user/home";
+    }
+
+    @ExceptionHandler(AiServerCommunicationException.class)
+    public String handleAiServerCommunicationException(Exception e, Model model) {
+        log.error("AI 서버와 통신 중 오류 발생 : {}", e.getMessage(), e);
         model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
