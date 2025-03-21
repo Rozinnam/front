@@ -21,8 +21,13 @@ public class RestWebhookController {
     public ResponseEntity<String> receiveResult(@RequestBody ResponseDto result) {
         String taskId = result.getTaskId();
 
+        if (taskId == null || taskId.isBlank()) {
+            log.error("TaskId is null or empty");
+            return ResponseEntity.badRequest().body("TaskId가 유요하지 않습니다.");
+        }
+
         messagingTemplate.convertAndSend("/topic/result/" + taskId, result);
-        log.info("TaskId : {}, Result : {}", taskId, result);
+        log.info("TaskId : {}", taskId);
 
         return ResponseEntity.ok("결과 전송 완료");
     }
