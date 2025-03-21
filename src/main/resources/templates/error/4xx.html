@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+
+<body>
+<h1>요청 처리 중 오류가 발생했습니다</h1>
+<p><strong>Status Code:</strong> <span th:text="${status}"></span></p>
+<p><strong>Message:</strong> <span th:text="${message}"></span></p>
+<a href="/">홈으로 돌아가기</a>
+</body>
+</html>

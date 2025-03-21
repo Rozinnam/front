@@ -1,6 +1,7 @@
 package com.example.front.file.adaptor;
 
 import com.example.front.config.BackAdaptorProperties;
+import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -11,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URI;
 import java.util.List;
 
@@ -22,10 +24,13 @@ public class FileAdaptor {
     private static final String SCHEME = "http://";
     private static final String URL = "/predict";
 
-    public String fileUpload(List<MultipartFile> files) {
+    public void communicateWithAiServer(List<MultipartFile> files, String taskId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        body.add("webhook_url", backAdaptorProperties.getWebhookUrl());
+        body.add("taskId", taskId);
 
         try {
             for (MultipartFile file : files) {
@@ -50,10 +55,8 @@ public class FileAdaptor {
                 String.class
         );
 
-        if (exchange.getStatusCode() != HttpStatus.OK) {
-            throw new IllegalStateException();
+        if (exchange.getStatusCode() != HttpStatus.ACCEPTED) {
+            throw new AiServerCommunicationException("AI 서버와의 통신 실패: 응답 코드" + exchange.getStatusCode() + ", 본문: " + exchange.getBody(), null);
         }
-
-        return exchange.getBody();
     }
 }
