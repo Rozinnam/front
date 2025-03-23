@@ -14,3 +14,6 @@ AI Model Server와 Front 서버 통신 확인
 [2025-03-20]
 결과창 만들기
 AI-SERVER와 비동기 통신
+
+[2025-03-24]
+Docker Image 용량 줄이기
