@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -29,13 +28,7 @@ public class FileService {
             }
         }
 
-        String taskId = generateTaskId();
-        fileAdaptor.communicateWithAiServer(files, taskId);
-
-        return taskId;
+        return fileAdaptor.communicateWithAiServer(files).toString();
     }
 
-    private String generateTaskId() {
-        return UUID.randomUUID().toString();
-    }
 }

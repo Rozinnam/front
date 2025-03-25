@@ -11,5 +11,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @RequiredArgsConstructor
 public class BackAdaptorProperties {
     private String address;
-    private String webhookUrl;
 }

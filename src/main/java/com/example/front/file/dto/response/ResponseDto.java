@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ResponseDto {
-    @JsonProperty("task_id")
-    private String taskId;
-
     @JsonProperty("Breakage_3")
     private float breakage;
 
@@ -23,4 +20,12 @@ public class ResponseDto {
 
     @JsonProperty("Seperated_1")
     private float seperated;
+
+    @Override
+    public String toString() {
+        return "파손 : " + this.breakage +
+                "\n찌그러짐 : " + this.crushed +
+                "\n긁힘 : " + this.scratch +
+                "\n이격 : " + this.seperated;
+    }
 }
