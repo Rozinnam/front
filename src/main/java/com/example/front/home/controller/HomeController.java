@@ -25,7 +25,7 @@ public class HomeController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
-        model.addAttribute("taskId", fileService.communicateWithAiServer(files));
+        model.addAttribute("result", fileService.communicateWithAiServer(files));
 
         return "user/result";
     }
