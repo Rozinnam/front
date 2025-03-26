@@ -27,6 +27,6 @@ public class HomeController {
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
         model.addAttribute("result", fileService.communicateWithAiServer(files));
 
-        return "user/result";
+        return "user/result1";
     }
 }
