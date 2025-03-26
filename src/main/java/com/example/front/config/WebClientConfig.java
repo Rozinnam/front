@@ -12,8 +12,8 @@ public class WebClientConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-                .connectTimeout(Duration.ofSeconds(3L))
-                .readTimeout(Duration.ofSeconds(3L))
+                .connectTimeout(Duration.ofSeconds(30L))
+                .readTimeout(Duration.ofSeconds(30L))
                 .build();
     }
 }
