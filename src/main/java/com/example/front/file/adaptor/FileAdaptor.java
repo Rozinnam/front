@@ -1,5 +1,6 @@
 package com.example.front.file.adaptor;
 
+import com.example.front.annotation.CalculateTime;
 import com.example.front.config.BackAdaptorProperties;
 import com.example.front.file.dto.response.ResponseDto;
 import com.example.front.file.exception.AiServerCommunicationException;
@@ -24,6 +25,7 @@ public class FileAdaptor {
     private static final String SCHEME = "http://";
     private static final String URL = "/predict";
 
+    @CalculateTime
     public ResponseDto communicateWithAiServer(List<MultipartFile> files) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
