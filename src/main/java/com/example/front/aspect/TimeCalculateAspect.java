@@ -14,13 +14,13 @@ public class TimeCalculateAspect {
     public Object calculateTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
-        Object result = joinPoint.proceed();
-
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-
-        log.info("AI서버와 통신하는데 걸린 시간 : {}ms", elapsedTime);
-
-        return result;
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            String methodName = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
+            log.info("{}메서드 실행 시간 : {}ms", methodName, elapsedTime);
+        }
     }
 }
