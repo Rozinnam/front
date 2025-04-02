@@ -11,20 +11,17 @@
         margin-top: 30px;
     }
 
+    /* 기존 input 숨기기 */
     input[type="file"] {
-        padding: 10px;
-        border: 1px solid #000; /* 테두리 검정 */
-        border-radius: 5px;
-        color: #000; /* 글씨 검정 */
-        background-color: transparent;
-        cursor: pointer;
+        display: none;
     }
 
-    input[type="file"]::-webkit-file-upload-button {
+    /* 사용자 지정 버튼 스타일 */
+    #customFileButton {
         padding: 10px 20px;
         border: none;
-        background-color: #000; /* 버튼 배경 검정 */
-        color: #fff; /* 버튼 글씨 흰색 */
+        background-color: #000;
+        color: #fff;
         border-radius: 5px;
         cursor: pointer;
     }
@@ -36,26 +33,23 @@
     /* 이미지 미리보기 스타일 */
     .preview-image {
         margin-top: 20px;
-        max-width: 200px;  /* 이미지 최대 너비 */
-        max-height: 200px; /* 이미지 최대 높이 */
-        object-fit: contain; /* 비율 유지 */
-        border: 1px solid #ccc; /* 테두리 */
+        max-width: 200px;
+        max-height: 200px;
+        object-fit: contain;
+        border: 1px solid #ccc;
         border-radius: 5px;
+        padding: 5px;
+        background-color: #fff;
     }
 
-    @media (max-width: 600px) {
-        input[type="file"] {
-            width: 80%;
-        }
-    }
-
-    /* 이미지 미리보기 컨테이너 가운데 정렬 */
+    /* 이미지 미리보기 컨테이너 */
     #imagePreviewContainer {
         display: flex;
-        justify-content: center; /* 가로 가운데 정렬 */
-        align-items: center; /* 세로 가운데 정렬 */
-        flex-wrap: wrap; /* 여러 이미지가 있을 경우 자동으로 줄 바꿈 */
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
         margin-top: 20px;
+        gap: 10px;
     }
 </style>
 
@@ -67,11 +61,15 @@
 
     <form method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
+            <!-- 숨겨진 파일 선택 input -->
             <input type="file" name="files" multiple id="fileInput">
+
+            <!-- 사용자 정의 파일 선택 버튼 -->
+            <button type="button" id="customFileButton">파일 선택</button>
         </div>
 
+        <!-- 이미지 미리보기 -->
         <div id="imagePreviewContainer"></div>
-
 
         <div class="margin-bottom">
             <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
@@ -84,49 +82,68 @@
 </div>
 
 <script>
-    document.getElementById("fileInput").addEventListener("change", function (event) {
-        const files = event.target.files;
-        const errorText = document.getElementById("errorText");
+    const fileInput = document.getElementById("fileInput");
+    const customFileButton = document.getElementById("customFileButton");
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+    const errorText = document.getElementById("errorText");
+
+    // 업로드할 파일 목록을 유지하는 배열
+    let selectedFiles = [];
+
+    customFileButton.addEventListener("click", function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function (event) {
+        const files = Array.from(event.target.files);  // 선택된 파일 배열로 변환
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const MAX_FILE_COUNT = 10;
         const MAX_FILE_SIZE = 10 * 1024 * 1024;
         const MB = 1024 * 1024;
-        const imagePreviewContainer = document.getElementById("imagePreviewContainer");
         errorText.textContent = ""; // 오류 메시지 초기화
 
-        if (files.length > 10) {
+        if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
             errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
-            event.target.value = ""; // 파일 선택 초기화
             return;
         }
 
-        for (let file of files) {
-            console.log(file.type);
-
+        files.forEach(file => {
             if (!allowedMimeTypes.includes(file.type)) {
                 errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
-                event.target.value = ""; // 파일 선택 초기화
                 return;
             }
 
-            if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
-                errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
-                event.target.value = ""; // 파일 선택 초기화
+            if (file.size > MAX_FILE_SIZE) {
+                errorText.textContent = "각 파일은 최대 " + (MAX_FILE_SIZE / MB) + "MB까지 업로드 가능합니다.";
                 return;
             }
 
-            // 이미지 미리보기
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const imgElement = document.createElement("img");
-                imgElement.src = e.target.result;
-                imgElement.classList.add("preview-image");
-                imagePreviewContainer.appendChild(imgElement);
-            };
-            reader.readAsDataURL(file);
-        }
+            // 중복 파일 방지
+            if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                selectedFiles.push(file);
+
+                // 이미지 미리보기 추가
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgElement = document.createElement("img");
+                    imgElement.src = e.target.result;
+                    imgElement.classList.add("preview-image");
+                    imagePreviewContainer.appendChild(imgElement);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // FormData 업데이트 (선택한 파일을 서버로 전송 가능하도록 설정)
+        updateFileInput();
     });
+
+    function updateFileInput() {
+        // FormData를 초기화하고 선택된 모든 파일을 추가
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
+    }
 </script>
 </body>
-
 </html>
