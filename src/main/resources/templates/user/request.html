@@ -30,26 +30,46 @@
         margin-bottom: 30px;
     }
 
-    /* 이미지 미리보기 스타일 */
-    .preview-image {
-        margin-top: 20px;
-        max-width: 200px;
-        max-height: 200px;
-        object-fit: contain;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 5px;
-        background-color: #fff;
+    .preview-container {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+        border-radius: 10px;
+        overflow: hidden;
     }
 
-    /* 이미지 미리보기 컨테이너 */
-    #imagePreviewContainer {
+    .preview-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+    }
+
+    .remove-button {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #555;
+        border: none;
+        border-radius: 50%;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
         display: flex;
-        justify-content: center;
         align-items: center;
-        flex-wrap: wrap;
-        margin-top: 20px;
-        gap: 10px;
+        justify-content: center;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .remove-button:hover {
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
     }
 </style>
 
@@ -87,7 +107,6 @@
     const imagePreviewContainer = document.getElementById("imagePreviewContainer");
     const errorText = document.getElementById("errorText");
 
-    // 업로드할 파일 목록을 유지하는 배열
     let selectedFiles = [];
 
     customFileButton.addEventListener("click", function () {
@@ -95,12 +114,12 @@
     });
 
     fileInput.addEventListener("change", function (event) {
-        const files = Array.from(event.target.files);  // 선택된 파일 배열로 변환
+        const files = Array.from(event.target.files);
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const MAX_FILE_COUNT = 10;
         const MAX_FILE_SIZE = 10 * 1024 * 1024;
         const MB = 1024 * 1024;
-        errorText.textContent = ""; // 오류 메시지 초기화
+        errorText.textContent = "";
 
         if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
             errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
@@ -118,28 +137,44 @@
                 return;
             }
 
-            // 중복 파일 방지
             if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
                 selectedFiles.push(file);
 
-                // 이미지 미리보기 추가
                 const reader = new FileReader();
                 reader.onload = function (e) {
+                    const previewContainer = document.createElement("div");
+                    previewContainer.classList.add("preview-container");
+
                     const imgElement = document.createElement("img");
                     imgElement.src = e.target.result;
                     imgElement.classList.add("preview-image");
-                    imagePreviewContainer.appendChild(imgElement);
+
+                    const removeButton = document.createElement("button");
+                    removeButton.innerHTML = "&#10006;"; // X 아이콘
+                    removeButton.classList.add("remove-button");
+
+                    removeButton.addEventListener("click", function () {
+                        removeFile(file, previewContainer);
+                    });
+
+                    previewContainer.appendChild(imgElement);
+                    previewContainer.appendChild(removeButton);
+                    imagePreviewContainer.appendChild(previewContainer);
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // FormData 업데이트 (선택한 파일을 서버로 전송 가능하도록 설정)
         updateFileInput();
     });
 
+    function removeFile(file, previewContainer) {
+        selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size);
+        previewContainer.remove();
+        updateFileInput();
+    }
+
     function updateFileInput() {
-        // FormData를 초기화하고 선택된 모든 파일을 추가
         const dataTransfer = new DataTransfer();
         selectedFiles.forEach(file => dataTransfer.items.add(file));
         fileInput.files = dataTransfer.files;
