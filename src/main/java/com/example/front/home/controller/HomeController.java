@@ -27,6 +27,11 @@ public class HomeController {
         return "user/home";
     }
 
+    @GetMapping("/request")
+    public String getRequestPage() {
+        return "user/request";
+    }
+
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
         model.addAttribute("result", fileService.communicateWithAiServer(files));
