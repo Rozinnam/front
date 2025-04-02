@@ -26,6 +26,8 @@ public class FileService {
             if (!fileUtils.isValidMimeType(file)) {
                 throw new FileUnsupportedFormatException();
             }
+
+            log.info("fileName : {}\n", file.getOriginalFilename());
         }
 
         return fileAdaptor.communicateWithAiServer(files).toString();
