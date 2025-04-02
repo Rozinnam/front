@@ -31,10 +31,10 @@ public class HomeController {
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
         model.addAttribute("result", fileService.communicateWithAiServer(files));
 
-        return isSyncMode() ? "user/result_sync" : "user/result_async"; 
+        return isSyncMode() ? "user/result_sync" : "user/result_async";
     }
 
     private boolean isSyncMode() {
-        return appMode.equalsIgnoreCase("async");
+        return appMode.equalsIgnoreCase("sync");
     }
 }
