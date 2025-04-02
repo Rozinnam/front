@@ -89,7 +89,7 @@
             // 스피너 숨기고 결과 표시
             document.getElementById('loading-spinner').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
-            document.getElementById('result-text').textContent = result;
+            document.getElementById('result-text').textContent = result_async;
         }, function (error) {
             console.error('STOMP 연결 오류:', error);
             document.getElementById('loading-spinner').style.display = 'none';

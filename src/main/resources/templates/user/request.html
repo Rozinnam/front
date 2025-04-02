@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+
+<style>
+    .center-location {
+        text-align: center;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    input[type="file"] {
+        padding: 10px;
+        border: 1px solid #000; /* 테두리 검정 */
+        border-radius: 5px;
+        color: #000; /* 글씨 검정 */
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #000; /* 버튼 배경 검정 */
+        color: #fff; /* 버튼 글씨 흰색 */
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .margin-bottom {
+        margin-bottom: 30px;
+    }
+
+    /* 이미지 미리보기 스타일 */
+    .preview-image {
+        margin-top: 20px;
+        max-width: 200px;  /* 이미지 최대 너비 */
+        max-height: 200px; /* 이미지 최대 높이 */
+        object-fit: contain; /* 비율 유지 */
+        border: 1px solid #ccc; /* 테두리 */
+        border-radius: 5px;
+    }
+
+    @media (max-width: 600px) {
+        input[type="file"] {
+            width: 80%;
+        }
+    }
+
+    /* 이미지 미리보기 컨테이너 가운데 정렬 */
+    #imagePreviewContainer {
+        display: flex;
+        justify-content: center; /* 가로 가운데 정렬 */
+        align-items: center; /* 세로 가운데 정렬 */
+        flex-wrap: wrap; /* 여러 이미지가 있을 경우 자동으로 줄 바꿈 */
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+<div class="center-location">
+    <div class="margin-bottom">
+        <h1>자동차 손상 사진을 골라주세요</h1>
+    </div>
+
+    <form method="post" action="upload" enctype="multipart/form-data">
+        <div class="margin-bottom">
+            <input type="file" name="files" multiple id="fileInput">
+        </div>
+
+        <div id="imagePreviewContainer"></div>
+
+
+        <div class="margin-bottom">
+            <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+        </div>
+    </form>
+</div>
+
+<div class="center-location">
+    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+</div>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        const files = event.target.files;
+        const errorText = document.getElementById("errorText");
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const MAX_FILE_COUNT = 10;
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const MB = 1024 * 1024;
+        const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+        errorText.textContent = ""; // 오류 메시지 초기화
+
+        if (files.length > 10) {
+            errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
+            event.target.value = ""; // 파일 선택 초기화
+            return;
+        }
+
+        for (let file of files) {
+            console.log(file.type);
+
+            if (!allowedMimeTypes.includes(file.type)) {
+                errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
+                event.target.value = ""; // 파일 선택 초기화
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) { // 10MB 초과 여부 확인
+                errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE / MB + "MB까지 업로드 가능합니다.";
+                event.target.value = ""; // 파일 선택 초기화
+                return;
+            }
+
+            // 이미지 미리보기
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgElement = document.createElement("img");
+                imgElement.src = e.target.result;
+                imgElement.classList.add("preview-image");
+                imagePreviewContainer.appendChild(imgElement);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+</body>
+
+</html>
