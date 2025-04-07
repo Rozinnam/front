@@ -1,5 +1,6 @@
 package com.example.front.file.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDto {
+    @JsonProperty("task_id")
+    private String taskId;
+
     @JsonProperty("Breakage_3")
     private float breakage;
 
