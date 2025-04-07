@@ -6,6 +6,7 @@ import com.example.front.file.dto.response.ResponseDto;
 import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,9 @@ import java.net.URI;
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(name = "app.mode", havingValue = "sync", matchIfMissing = true)
 @RequiredArgsConstructor
-public class FileAdaptor {
+public class SyncFileAdaptor {
     private final RestTemplate restTemplate;
     private final BackAdaptorProperties backAdaptorProperties;
     private static final String SCHEME = "http://";
