@@ -31,10 +31,13 @@ public class AsyncFileService implements FileService {
             if (!fileUtils.isValidMimeType(file)) {
                 throw new FileUnsupportedFormatException();
             }
+
+            log.info("fileName : {}\n", file.getOriginalFilename());
         }
 
         String taskId = generateTaskId();
         asyncFileAdaptor.communicateWithAiServer(files, taskId);
+        log.info("taskId : {}\n", taskId);
 
         return taskId;
     }
