@@ -18,7 +18,7 @@ import java.util.UUID;
 @ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequiredArgsConstructor
 public class AsyncFileService implements FileService {
-    private final AsyncFileAdaptor fileAdaptor;
+    private final AsyncFileAdaptor asyncFileAdaptor;
     private final FileUtils fileUtils;
 
     @Override
@@ -34,7 +34,7 @@ public class AsyncFileService implements FileService {
         }
 
         String taskId = generateTaskId();
-        fileAdaptor.communicateWithAiServer(files, taskId);
+        asyncFileAdaptor.communicateWithAiServer(files, taskId);
 
         return taskId;
     }
