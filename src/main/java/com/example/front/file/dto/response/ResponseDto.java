@@ -28,9 +28,16 @@ public class ResponseDto {
 
     @Override
     public String toString() {
-        return "파손 : " + this.breakage +
-                "\n찌그러짐 : " + this.crushed +
-                "\n긁힘 : " + this.scratch +
-                "\n이격 : " + this.seperated;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (this.taskId != null) {
+            stringBuilder.append("taskId : ").append(this.taskId).append("\n");
+        }
+        stringBuilder.append("파손 : ").append(this.breakage).append("\n")
+                .append("찌그러짐 : ").append(this.crushed).append("\n")
+                .append("긁힘 : ").append(this.scratch).append("\n")
+                .append("이격 : ").append(this.seperated);
+
+        return stringBuilder.toString();
     }
 }
