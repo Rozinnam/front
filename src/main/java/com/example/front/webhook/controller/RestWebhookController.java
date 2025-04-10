@@ -28,7 +28,7 @@ public class RestWebhookController {
             return ResponseEntity.badRequest().body("TaskId가 유효하지 않습니다.");
         }
 
-        messagingTemplate.convertAndSend("/topic/result/" + taskId, result);
+        messagingTemplate.convertAndSend("/topic/result/" + taskId, result.toString());
         log.info("TaskId : {}", taskId);
 
         return ResponseEntity.ok("결과 전송 완료");
