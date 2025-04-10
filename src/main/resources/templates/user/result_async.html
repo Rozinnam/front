@@ -5,6 +5,9 @@
       layout:fragment="content">
 <head>
     <meta charset="UTF-8">
+    <script th:inline="javascript">
+        const taskId = [[${taskId}]];
+    </script>
     <style>
         /* 스피너 및 결과 스타일 */
         .spinner {
@@ -81,7 +84,6 @@
 
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        var taskId = document.getElementById("taskId").textContent;
         // 토픽 구독
         stompClient.subscribe('/topic/result/' + taskId, function (message) {
             const result = message.body;
