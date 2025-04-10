@@ -29,7 +29,8 @@ public class RestWebhookController {
         }
 
         messagingTemplate.convertAndSend("/topic/result/" + taskId, result.toString());
-        log.info("TaskId : {}", taskId);
+        log.info("TaskId : {}\n", taskId);
+        log.info("result : {}\n", result);
 
         return ResponseEntity.ok("결과 전송 완료");
     }
