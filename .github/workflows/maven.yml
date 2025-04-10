@@ -88,6 +88,7 @@ jobs:
           script_stop: true
           script: |
             echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > /home/${{ secrets.EC2_USERNAME }}/.env
+            echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
             
             sudo docker stop front || true
             sudo docker rm front || true
