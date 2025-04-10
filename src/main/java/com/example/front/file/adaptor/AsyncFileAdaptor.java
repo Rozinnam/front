@@ -4,6 +4,7 @@ import com.example.front.config.BackAdaptorProperties;
 import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @Component
 @ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequiredArgsConstructor
@@ -33,6 +35,8 @@ public class AsyncFileAdaptor {
 
         body.add("webhook_url", backAdaptorProperties.getWebhookUrl());
         body.add("taskId", taskId);
+
+        log.info("webhook_url : {}", backAdaptorProperties.getWebhookUrl());
 
         try {
             for (MultipartFile file : files) {
