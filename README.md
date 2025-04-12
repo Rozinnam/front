@@ -24,3 +24,6 @@ Docker Image 용량 줄이기
 
 [2025-04-02]
 RestTemplate 말고 다른 방식 고려
+
+[2025-04-12]
+ai model 예측값 오류 수정중
