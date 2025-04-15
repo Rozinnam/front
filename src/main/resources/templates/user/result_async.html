@@ -5,6 +5,9 @@
       layout:fragment="content">
 <head>
     <meta charset="UTF-8">
+    <script th:inline="javascript">
+        const taskId = [[${taskId}]];
+    </script>
     <style>
         /* 스피너 및 결과 스타일 */
         .spinner {
@@ -75,28 +78,25 @@
 </div>
 
 <script>
-    // WebSocket 연결 설정
-    const socket = new SockJS('/ws');
-    const stompClient = Stomp.over(socket);
+    const eventSource = new EventSource(`/sse/subscribe/${taskId}`);
 
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-        var taskId = document.getElementById("taskId").textContent;
-        // 토픽 구독
-        stompClient.subscribe('/topic/result/' + taskId, function (message) {
-            const result = message.body;
+    eventSource.onmessage = function (event) {
+        const result = event.data;
 
-            // 스피너 숨기고 결과 표시
-            document.getElementById('loading-spinner').style.display = 'none';
-            document.getElementById('result-container').style.display = 'block';
-            document.getElementById('result-text').textContent = result;
-        }, function (error) {
-            console.error('STOMP 연결 오류:', error);
-            document.getElementById('loading-spinner').style.display = 'none';
-            document.getElementById('result-container').style.display = 'block';
-            document.getElementById('result-text').textContent = '서버 연결 오류가 발생했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
-        });
-    });
+        document.getElementById('loading-spinner').style.display = 'none';
+        document.getElementById('result-container').style.display = 'block';
+        document.getElementById('result-text').textContent = result;
+
+        eventSource.close();
+    };
+
+    eventSource.onerror = function () {
+        document.getElementById('loading-spinner').style.display = 'none';
+        document.getElementById('result-container').style.display = 'block';
+        document.getElementById('result-text').textContent = '서버 연결 오류가 발생했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
+        eventSource.close();
+    };
 </script>
+
 </body>
 </html>

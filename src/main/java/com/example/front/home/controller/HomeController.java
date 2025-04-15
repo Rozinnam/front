@@ -34,12 +34,23 @@ public class HomeController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
-        model.addAttribute("result", fileService.communicateWithAiServer(files));
+        String result = fileService.communicateWithAiServer(files);
 
-        return isSyncMode() ? "user/result_sync" : "user/result_async";
+        if (isSyncMode()) {
+            model.addAttribute("result", result);
+            return "user/result_sync";
+        } else if (isAsyncMode()) {
+            model.addAttribute("taskId", result);
+            return "user/result_async";
+        }
+
+        throw new IllegalStateException("앱 모드 설정을 확인해주세요.");
     }
 
     private boolean isSyncMode() {
         return appMode.equalsIgnoreCase("sync");
+    }
+    private boolean isAsyncMode() {
+        return appMode.equalsIgnoreCase("async");
     }
 }

@@ -107,10 +107,20 @@ public class GlobalControllerAdvice {
         return mav;
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ModelAndView handleIllegalStateException(IllegalStateException e) {
+        log.error("IllegalStateException 발생 : {}", e.getMessage(), e);
+        ModelAndView mav = new ModelAndView("error/generic");
+        mav.addObject("message", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return mav;
+    }
+
 
     //GenericException
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleException(Exception e, Model model) {
+    public ModelAndView handleException(Exception e) {
         log.error("처리 되지 않은 예외 발생", e);
         ModelAndView mav = new ModelAndView("error/generic");
         mav.addObject("message", "시스템 오류가 발생했습니다.\n" +
