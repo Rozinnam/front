@@ -1,5 +1,6 @@
 package com.example.front.file.adaptor;
 
+import com.example.front.annotation.CalculateTime;
 import com.example.front.config.BackAdaptorProperties;
 import com.example.front.file.exception.AiServerCommunicationException;
 import com.example.front.file.exception.UnExpectedStateException;
@@ -28,6 +29,7 @@ public class AsyncFileAdaptor {
     private static final String SCHEME = "http://";
     private static final String URL = "/predict";
 
+    @CalculateTime
     public void communicateWithAiServer(List<MultipartFile> files, String taskId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
