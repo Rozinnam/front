@@ -38,8 +38,6 @@ public class AsyncFileAdaptor {
         body.add("webhook_url", backAdaptorProperties.getWebhookUrl());
         body.add("taskId", taskId);
 
-        log.info("webhook_url : {}", backAdaptorProperties.getWebhookUrl());
-
         try {
             for (MultipartFile file : files) {
                 body.add("image", new ByteArrayResource(file.getBytes()) {
