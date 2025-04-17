@@ -29,7 +29,7 @@ public class RestWebhookController {
         }
 
         sseRestController.sendResult(taskId, result.toString());
-        log.info("결과 전송 완료: {}", result);
+        log.info("결과 전송 완료: \n{}", result);
 
         return ResponseEntity.ok("결과 전송 완료");
     }
