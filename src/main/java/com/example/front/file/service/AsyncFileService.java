@@ -3,7 +3,9 @@ package com.example.front.file.service;
 import com.example.front.file.adaptor.AsyncFileAdaptor;
 import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
-import com.example.front.file.utils.FileUtils;
+import com.example.front.util.FileUtils;
+import com.example.front.part.domain.CarPart;
+import com.example.front.util.TaskCarPartRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,9 +22,10 @@ import java.util.UUID;
 public class AsyncFileService implements FileService {
     private final AsyncFileAdaptor asyncFileAdaptor;
     private final FileUtils fileUtils;
+    private final TaskCarPartRegistry taskCarPartRegistry;
 
     @Override
-    public String communicateWithAiServer(List<MultipartFile> files) {
+    public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
         }
@@ -36,6 +39,7 @@ public class AsyncFileService implements FileService {
         }
 
         String taskId = generateTaskId();
+        taskCarPartRegistry.register(taskId, carPart);
         asyncFileAdaptor.communicateWithAiServer(files, taskId);
         log.info("taskId : {}\n", taskId);
 

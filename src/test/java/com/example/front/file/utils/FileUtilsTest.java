@@ -2,6 +2,7 @@ package com.example.front.file.utils;
 
 import com.example.front.config.FileProperties;
 import com.example.front.file.exception.FileEmptyException;
+import com.example.front.util.FileUtils;
 import org.apache.tika.Tika;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,7 @@
 package com.example.front.home.controller;
 
 import com.example.front.file.service.FileService;
+import com.example.front.part.domain.CarPart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,13 +29,17 @@ public class HomeController {
     }
 
     @GetMapping("/request")
-    public String getRequestPage() {
+    public String getRequestPage(Model model) {
+        model.addAttribute("carParts", CarPart.values());
+
         return "user/request";
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("files") List<MultipartFile> files, Model model) {
-        String result = fileService.communicateWithAiServer(files);
+    public String upload(@RequestParam("files") List<MultipartFile> files,
+                         @RequestParam("selectedCarPart") CarPart carPart,
+                         Model model) {
+        String result = fileService.communicateWithAiServer(files, carPart);
 
         if (isSyncMode()) {
             model.addAttribute("result", result);
@@ -50,6 +55,7 @@ public class HomeController {
     private boolean isSyncMode() {
         return appMode.equalsIgnoreCase("sync");
     }
+
     private boolean isAsyncMode() {
         return appMode.equalsIgnoreCase("async");
     }
