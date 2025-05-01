@@ -18,7 +18,7 @@ public class CarRepairCostCalculator {
     }
 
     private static String generateMessage(ResponseDto responseDto, CarPart carPart) {
-        if (carPart.isReplacementOnly() || responseDto.getSeperated() >= 50) {
+        if (isReplacementRecommended(responseDto, carPart)) {
             return "교체 추천" + NEW_LINE + "비용 : " + carPart.getReplacementCost() + "원";
         }
 
@@ -36,7 +36,7 @@ public class CarRepairCostCalculator {
     }
 
     private static int calculateRepairCost(ResponseDto responseDto, CarPart carPart) {
-        if (carPart.isReplacementOnly() || responseDto.getSeperated() >= 50) {
+        if (isReplacementRecommended(responseDto, carPart)) {
             return carPart.getReplacementCost();
         }
 
@@ -67,6 +67,10 @@ public class CarRepairCostCalculator {
         }
 
         return 0;
+    }
+
+    private static boolean isReplacementRecommended(ResponseDto responseDto, CarPart carPart) {
+        return carPart.isReplacementOnly() || responseDto.getSeperated() >= 50;
     }
 
     private static int roundToUnit(double cost) {
