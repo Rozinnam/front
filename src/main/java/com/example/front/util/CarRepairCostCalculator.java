@@ -9,19 +9,30 @@ public class CarRepairCostCalculator {
 
     private static final int BASIC_PAINT_COST = 300000;
     private static final double UNIT = 100000.0;
+    private static final String NEW_LINE = "\n";
+    private static final String HTML_NEW_LINE = "<br>";
 
     public static String calculate(ResponseDto responseDto, CarPart carPart) {
-        int repairCost = (int) (Math.round(calculateRepairCost(responseDto, carPart) / UNIT) * UNIT);
-        int replacementCost = carPart.getReplacementCost();
-        double percent = (repairCost * 100.0) / replacementCost;
+        String rawMessage = generateMessage(responseDto, carPart);
+        return convertNewLineToBrTags(rawMessage);
+    }
 
-        if (repairCost > replacementCost) {
-            return "교체 추천\n비용 : " + replacementCost + "원";
-        } else if (percent >= 45 && percent < 55) {
-            return "교체 비용 : " + replacementCost + " 판금 및 도색 비용 : " + repairCost + "원";
+    private static String generateMessage(ResponseDto responseDto, CarPart carPart) {
+        if (carPart.isReplacementOnly() || responseDto.getSeperated() >= 50) {
+            return "교체 추천" + NEW_LINE + "비용 : " + carPart.getReplacementCost() + "원";
         }
 
-        return "판금 및 도색 추천\n비용 : " + repairCost + "원";
+        int repairCost = roundToUnit(calculateRepairCost(responseDto, carPart));
+        int replacementCost = carPart.getReplacementCost();
+        double percent = calculateRepairPercent(repairCost, replacementCost);
+
+        if (repairCost > replacementCost) {
+            return "교체 추천" + NEW_LINE + "비용 : " + replacementCost + "원";
+        } else if (percent >= 45 && percent < 55) {
+            return "교체 비용 : " + replacementCost + NEW_LINE + "판금 및 도색 비용 : " + repairCost + "원";
+        } else {
+            return "판금 및 도색 추천" + NEW_LINE + "비용 : " + repairCost + "원";
+        }
     }
 
     private static int calculateRepairCost(ResponseDto responseDto, CarPart carPart) {
@@ -58,6 +69,14 @@ public class CarRepairCostCalculator {
         return 0;
     }
 
+    private static int roundToUnit(double cost) {
+        return (int) (Math.round(cost / UNIT) * UNIT);
+    }
+
+    private static double calculateRepairPercent(int repairCost, int replacementCost) {
+        return (repairCost * 100.0) / replacementCost;
+    }
+
     private static int calculatePaintCost(float scratchAmount, CarPart carPart) {
         if (scratchAmount < 20) {
             return 0;
@@ -75,5 +94,9 @@ public class CarRepairCostCalculator {
             default:
                 return BASIC_PAINT_COST;
         }
+    }
+
+    private static String convertNewLineToBrTags(String message) {
+        return message.replace(NEW_LINE, HTML_NEW_LINE);
     }
 }
