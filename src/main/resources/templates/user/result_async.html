@@ -85,7 +85,7 @@
 
         document.getElementById('loading-spinner').style.display = 'none';
         document.getElementById('result-container').style.display = 'block';
-        document.getElementById('result-text').textContent = result;
+        document.getElementById('result-text').innerHTML = result;
 
         eventSource.close();
     };
