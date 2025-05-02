@@ -1,5 +1,6 @@
 package com.example.front.util;
 
+import com.example.front.file.exception.CarPartNotFoundForTaskIdException;
 import com.example.front.part.domain.CarPart;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,10 @@ public class TaskCarPartRegistry {
     }
 
     public CarPart getCarPart(String taskId) {
+        if (!taskCarPartMap.containsKey(taskId)) {
+            throw new CarPartNotFoundForTaskIdException();
+        }
+
         return taskCarPartMap.get(taskId).carPart;
     }
 

@@ -72,6 +72,15 @@ public class GlobalControllerAdvice {
         return "user/request";
     }
 
+    @ExceptionHandler(CarPartNotFoundForTaskIdException.class)
+    public String handleCarPartNotFoundForTaskIdException(Exception e, Model model) {
+        log.error("TaskId 에 해당하는 CarPart 찾지 못함 오류 발생", e);
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return "user/request";
+    }
+
     @ExceptionHandler(AiServerCommunicationException.class)
     public String handleAiServerCommunicationException(Exception e, Model model) {
         log.error("AI 서버와 통신 중 오류 발생 : {}", e.getMessage(), e);
@@ -120,7 +129,6 @@ public class GlobalControllerAdvice {
 
         return mav;
     }
-
 
     //GenericException
     @ExceptionHandler(Exception.class)
