@@ -1,6 +1,7 @@
 package com.example.front.file.service;
 
 import com.example.front.file.adaptor.AsyncFileAdaptor;
+import com.example.front.file.exception.CarPartEmptyException;
 import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.util.FileUtils;
@@ -28,6 +29,10 @@ public class AsyncFileService implements FileService {
     public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
+        }
+
+        if (carPart == null) {
+            throw new CarPartEmptyException();
         }
 
         for (MultipartFile file : files) {

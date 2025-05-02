@@ -1,6 +1,7 @@
 package com.example.front.file.service;
 
 import com.example.front.file.adaptor.SyncFileAdaptor;
+import com.example.front.file.exception.CarPartEmptyException;
 import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
 import com.example.front.part.domain.CarPart;
@@ -24,6 +25,10 @@ public class SyncFileService implements FileService {
     public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
+        }
+
+        if (carPart == null) {
+            throw new CarPartEmptyException();
         }
 
         for (MultipartFile file : files) {

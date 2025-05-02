@@ -1,10 +1,7 @@
 package com.example.front.global;
 
 import com.example.front.config.FileProperties;
-import com.example.front.file.exception.AiServerCommunicationException;
-import com.example.front.file.exception.FileEmptyException;
-import com.example.front.file.exception.FileUnsupportedFormatException;
-import com.example.front.file.exception.UnExpectedStateException;
+import com.example.front.file.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -55,6 +52,13 @@ public class GlobalControllerAdvice {
     public String handlerFileEmptyException(Model model) {
         model.addAttribute("errorMessage", "업로드할 파일을 선택해 주세요.\n" +
                 "파일 선택 버튼을 클릭하여 파일을 추가하실 수 있습니다.");
+
+        return "user/request";
+    }
+
+    @ExceptionHandler(CarPartEmptyException.class)
+    public String handleCarPartEmptyException(Model model) {
+        model.addAttribute("errorMessage", "파손된 부품을 선택해 주세요.");
 
         return "user/request";
     }
