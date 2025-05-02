@@ -9,6 +9,20 @@ public class CarRepairCostCalculator {
 
     private static final int BASIC_PAINT_COST = 300000;
     private static final double UNIT = 100000.0;
+
+    // 손상 임계값 상수
+    private static final float MINOR_DAMAGE_THRESHOLD = 20.0f;
+    private static final float SEVERE_BREAKAGE_THRESHOLD = 300.0f;
+    private static final float SEVERE_CRUSHED_THRESHOLD = 400.0f;
+    private static final float TOTAL_DAMAGE_THRESHOLD = 600.0f;
+    private static final float SIGNIFICANT_SCRATCH_THRESHOLD = 50.0f;
+    private static final float MODERATE_SCRATCH_THRESHOLD = 60.0f;
+
+    // 부품별 추가 도색 비용
+    private static final int HOOD_ADDITIONAL_COST = 100000;
+    private static final int ROOF_ADDITIONAL_COST = 200000;
+    private static final int DOOR_ADDITIONAL_COST = 50000;
+
     private static final String NEW_LINE = "\n";
     private static final String HTML_NEW_LINE = "<br>";
 
@@ -28,7 +42,7 @@ public class CarRepairCostCalculator {
 
         int repairCost = roundToUnit(calculateRepairCost(responseDto, carPart));
         int replacementCost = carPart.getReplacementCost();
-        double percent = replacementCost == 0 ? 100.0 : (repairCost * 100.0) / replacementCost;
+        double percent = calculateRepairPercent(repairCost, replacementCost);
 
         if (repairCost > replacementCost) {
             return "교체 추천" + NEW_LINE + "비용 : " + replacementCost + "원";
@@ -50,27 +64,35 @@ public class CarRepairCostCalculator {
         return Math.min(carPart.getReplacementCost(), (sheetMetalCost + paintCost));
     }
 
-    private static int calculateSheetMetalCost(ResponseDto responseDto, CarPart carpart) {
+    private static int calculateSheetMetalCost(ResponseDto responseDto, CarPart carPart) {
         float breakageAmount = responseDto.getBreakage();
         float crushedAmount = responseDto.getCrushed();
+        float scratchAmount = responseDto.getScratch();
 
-        if (breakageAmount < 20 && crushedAmount < 20) {
+        // 1. 파손과 찌그러짐이 모두 경미한 경우 → 판금 없음
+        if (breakageAmount < MINOR_DAMAGE_THRESHOLD && crushedAmount < MINOR_DAMAGE_THRESHOLD) {
             return 0;
-        } else if ((breakageAmount + crushedAmount > 600) || breakageAmount > 300 || crushedAmount > 400) {
-            return carpart.getReplacementCost() - calculatePaintCost(responseDto.getScratch(), carpart);
-        } else if (breakageAmount >= 20 && crushedAmount >= 20) {
-            return (int) (breakageAmount + crushedAmount) / 6 * 10000;
-        } else if (breakageAmount >= 20 && crushedAmount < 20) {
-            return (int) (breakageAmount / 3 * 10000);
-        } else if (breakageAmount < 20 && crushedAmount >= 20) {
-            if (responseDto.getScratch() >= 50) {
-                return (int) crushedAmount / 3 * 20000;
-            }
-
-            return 50000;
         }
 
-        return 0;
+        // 2. 심각한 손상의 경우 → 교체 비용 - 도색 비용
+        if ((breakageAmount + crushedAmount > TOTAL_DAMAGE_THRESHOLD) ||
+                breakageAmount > SEVERE_BREAKAGE_THRESHOLD ||
+                crushedAmount > SEVERE_CRUSHED_THRESHOLD) {
+            return carPart.getReplacementCost() - calculatePaintCost(scratchAmount, carPart);
+        }
+
+        // 3. 파손과 찌그러짐이 모두 존재하는 경우
+        if (breakageAmount >= MINOR_DAMAGE_THRESHOLD && crushedAmount >= MINOR_DAMAGE_THRESHOLD) {
+            return (int) ((breakageAmount + crushedAmount) / 6 * 10000);
+        }
+
+        // 4. 파손만 있는 경우
+        if (breakageAmount >= MINOR_DAMAGE_THRESHOLD) {
+            return (int) (breakageAmount / 3 * 10000);
+        }
+
+        // 5. 찌그러짐만 있는 경우
+        return scratchAmount >= SIGNIFICANT_SCRATCH_THRESHOLD ? (int) (crushedAmount / 3 * 20000) : 50000;
     }
 
     private static boolean isReplacementRecommended(ResponseDto responseDto, CarPart carPart) {
@@ -82,23 +104,32 @@ public class CarRepairCostCalculator {
     }
 
     private static double calculateRepairPercent(int repairCost, int replacementCost) {
+        if (replacementCost == 0) {
+            return 100.0;
+        }
+
         return (repairCost * 100.0) / replacementCost;
     }
 
     private static int calculatePaintCost(float scratchAmount, CarPart carPart) {
-        if (scratchAmount < 20) {
+        // 스크래치가 경미한 경우 도색 비용 없음
+        if (scratchAmount < MINOR_DAMAGE_THRESHOLD) {
             return 0;
-        } else if (scratchAmount >= 20 && scratchAmount < 60) {
+        }
+
+        // 중간 정도의 스크래치는 면적에 비례한 비용 계산
+        if (scratchAmount < MODERATE_SCRATCH_THRESHOLD) {
             return (int) (scratchAmount * 5000);
         }
 
+        // 심각한 스크래치(60 이상)는 부품에 따라 기본 비용 + 추가 비용 적용
         switch (carPart) {
             case HOOD:
-                return BASIC_PAINT_COST + 100000;
+                return BASIC_PAINT_COST + HOOD_ADDITIONAL_COST; // 후드는 넓은 면적과 복잡한 도색 작업이 필요
             case ROOF:
-                return BASIC_PAINT_COST + 200000;
+                return BASIC_PAINT_COST + ROOF_ADDITIONAL_COST; // 루프는 가장 넓은 면적과 특수 도색 기법 필요
             case FRONT_DOOR, REAR_DOOR:
-                return BASIC_PAINT_COST + 50000;
+                return BASIC_PAINT_COST + DOOR_ADDITIONAL_COST; // 도어는 추가 작업 필요
             default:
                 return BASIC_PAINT_COST;
         }
