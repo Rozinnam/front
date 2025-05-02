@@ -27,11 +27,12 @@ public class TaskCarPartRegistry {
     }
 
     public CarPart getCarPart(String taskId) {
-        if (!taskCarPartMap.containsKey(taskId)) {
-            throw new CarPartNotFoundForTaskIdException();
+        Entry entry = taskCarPartMap.get(taskId);
+        if (entry == null) {
+            throw new CarPartNotFoundForTaskIdException(taskId);
         }
 
-        return taskCarPartMap.get(taskId).carPart;
+        return entry.carPart;
     }
 
     public void remove(String taskId) {
