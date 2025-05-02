@@ -1,4 +1,4 @@
-package com.example.front.file.utils;
+package com.example.front.util;
 
 import com.example.front.config.FileProperties;
 import com.example.front.file.exception.FileEmptyException;

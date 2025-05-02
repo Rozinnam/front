@@ -1,10 +1,7 @@
 package com.example.front.global;
 
 import com.example.front.config.FileProperties;
-import com.example.front.file.exception.AiServerCommunicationException;
-import com.example.front.file.exception.FileEmptyException;
-import com.example.front.file.exception.FileUnsupportedFormatException;
-import com.example.front.file.exception.UnExpectedStateException;
+import com.example.front.file.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -59,6 +56,13 @@ public class GlobalControllerAdvice {
         return "user/request";
     }
 
+    @ExceptionHandler(CarPartEmptyException.class)
+    public String handleCarPartEmptyException(Model model) {
+        model.addAttribute("errorMessage", "파손된 부품을 선택해 주세요.");
+
+        return "user/request";
+    }
+
     @ExceptionHandler(UnExpectedStateException.class)
     public String handleUnExpectedStateException(Exception e, Model model) {
         log.error("예기치 못한 에러 발생", e);
@@ -68,9 +72,27 @@ public class GlobalControllerAdvice {
         return "user/request";
     }
 
+    @ExceptionHandler(CarPartNotFoundForTaskIdException.class)
+    public String handleCarPartNotFoundForTaskIdException(CarPartNotFoundForTaskIdException e, Model model) {
+        log.error("TaskId 에 해당하는 CarPart 찾지 못함 오류 발생", e);
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return "user/request";
+    }
+
     @ExceptionHandler(AiServerCommunicationException.class)
     public String handleAiServerCommunicationException(Exception e, Model model) {
         log.error("AI 서버와 통신 중 오류 발생 : {}", e.getMessage(), e);
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return "user/request";
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(Exception e, Model model) {
+        log.error("IllegalArgumentException 발생 : \n{}", e.getMessage(), e);
         model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
@@ -116,7 +138,6 @@ public class GlobalControllerAdvice {
 
         return mav;
     }
-
 
     //GenericException
     @ExceptionHandler(Exception.class)

@@ -1,9 +1,12 @@
 package com.example.front.file.service;
 
 import com.example.front.file.adaptor.SyncFileAdaptor;
+import com.example.front.file.exception.CarPartEmptyException;
 import com.example.front.file.exception.FileEmptyException;
 import com.example.front.file.exception.FileUnsupportedFormatException;
-import com.example.front.file.utils.FileUtils;
+import com.example.front.part.domain.CarPart;
+import com.example.front.util.CarRepairCostCalculator;
+import com.example.front.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,9 +22,13 @@ public class SyncFileService implements FileService {
     private final SyncFileAdaptor syncFileAdaptor;
     private final FileUtils fileUtils;
 
-    public String communicateWithAiServer(List<MultipartFile> files) {
+    public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
+        }
+
+        if (carPart == null) {
+            throw new CarPartEmptyException();
         }
 
         for (MultipartFile file : files) {
@@ -32,7 +39,7 @@ public class SyncFileService implements FileService {
             log.info("fileName : {}\n", file.getOriginalFilename());
         }
 
-        return syncFileAdaptor.communicateWithAiServer(files).toString();
+        return CarRepairCostCalculator.calculate(syncFileAdaptor.communicateWithAiServer(files), carPart);
     }
 
 }
