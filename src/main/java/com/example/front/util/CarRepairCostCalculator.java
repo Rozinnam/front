@@ -28,7 +28,7 @@ public class CarRepairCostCalculator {
 
         int repairCost = roundToUnit(calculateRepairCost(responseDto, carPart));
         int replacementCost = carPart.getReplacementCost();
-        double percent = calculateRepairPercent(repairCost, replacementCost);
+        double percent = replacementCost == 0 ? 100.0 : (repairCost * 100.0) / replacementCost;
 
         if (repairCost > replacementCost) {
             return "교체 추천" + NEW_LINE + "비용 : " + replacementCost + "원";
