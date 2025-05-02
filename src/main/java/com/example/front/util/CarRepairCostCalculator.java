@@ -13,6 +13,10 @@ public class CarRepairCostCalculator {
     private static final String HTML_NEW_LINE = "<br>";
 
     public static String calculate(ResponseDto responseDto, CarPart carPart) {
+        if (responseDto == null || carPart == null) {
+            throw new IllegalArgumentException("responseDto 또는 carPart 는 null 이 될 수 없습니다.");
+        }
+
         String rawMessage = generateMessage(responseDto, carPart);
         return convertNewLineToBrTags(rawMessage);
     }

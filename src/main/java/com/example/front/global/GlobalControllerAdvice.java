@@ -90,6 +90,15 @@ public class GlobalControllerAdvice {
         return "user/request";
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(Exception e, Model model) {
+        log.error("IllegalArgumentException 발생 : \n{}", e.getMessage(), e);
+        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+                "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
+
+        return "user/request";
+    }
+
     //RestTemplate 관련 예외
     @ExceptionHandler(HttpClientErrorException.class)
     public ModelAndView handleHttpClientError(HttpClientErrorException e) {
