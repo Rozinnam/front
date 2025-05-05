@@ -85,8 +85,8 @@
     <form method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
             <label for="selectedCarPart">파손된 부품을 선택하세요</label>
-            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required>
-                <option value="">부품을 선택하세요</option>
+            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
+                <option value="" disabled selected hidden>부품을 선택하세요</option>
                 <th:block th:each="part : ${carParts}">
                     <option th:value="${part.name()}" th:text="${part.displayName}"></option>
                 </th:block>
