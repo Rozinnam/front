@@ -13,6 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @ControllerAdvice
@@ -21,79 +22,79 @@ public class GlobalControllerAdvice {
     private final FileProperties fileProperties;
 
     @ExceptionHandler(FileUnsupportedFormatException.class)
-    public String fileUnsupportedFormatException(Model model) {
-        model.addAttribute("errorMessage", "지원되지 않는 파일 형식입니다.\n지원 파일 형식: "
+    public String fileUnsupportedFormatException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", "지원되지 않는 파일 형식입니다.\n지원 파일 형식: "
                 + String.join(", ", fileProperties.getSupportedTypes()));
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public String maxFilesExceededException(Model model) {
-        model.addAttribute("errorMessage",
+    public String maxFilesExceededException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage",
                 "각 파일은 최대 " + fileProperties.getMaxSize() + "까지 업로드 가능합니다.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(MultipartException.class)
-    public String fileSizeTooLargeException(MultipartException e, Model model) {
+    public String fileSizeTooLargeException(MultipartException e, RedirectAttributes redirectAttributes) {
         if (e.getCause() instanceof IllegalStateException) {
-            model.addAttribute("errorMessage",
+            redirectAttributes.addFlashAttribute("errorMessage",
                     "최대 " + fileProperties.getMaxCount() + "개의 파일만 업로드할 수 있습니다.");
         } else {
-            model.addAttribute("errorMessage", "파일 업로드 중 알 수 없는 오류가 발생했습니다.");
+            redirectAttributes.addFlashAttribute("errorMessage", "파일 업로드 중 알 수 없는 오류가 발생했습니다.");
         }
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(FileEmptyException.class)
-    public String handlerFileEmptyException(Model model) {
-        model.addAttribute("errorMessage", "업로드할 파일을 선택해 주세요.\n" +
+    public String handlerFileEmptyException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", "업로드할 파일을 선택해 주세요.\n" +
                 "파일 선택 버튼을 클릭하여 파일을 추가하실 수 있습니다.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(CarPartEmptyException.class)
-    public String handleCarPartEmptyException(Model model) {
-        model.addAttribute("errorMessage", "파손된 부품을 선택해 주세요.");
+    public String handleCarPartEmptyException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", "파손된 부품을 선택해 주세요.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(UnExpectedStateException.class)
-    public String handleUnExpectedStateException(Exception e, Model model) {
+    public String handleUnExpectedStateException(Exception e, RedirectAttributes redirectAttributes) {
         log.error("예기치 못한 에러 발생", e);
-        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+        redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(CarPartNotFoundForTaskIdException.class)
-    public String handleCarPartNotFoundForTaskIdException(CarPartNotFoundForTaskIdException e, Model model) {
+    public String handleCarPartNotFoundForTaskIdException(CarPartNotFoundForTaskIdException e, RedirectAttributes redirectAttributes) {
         log.error("TaskId 에 해당하는 CarPart 찾지 못함 오류 발생", e);
-        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+        redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(AiServerCommunicationException.class)
-    public String handleAiServerCommunicationException(Exception e, Model model) {
+    public String handleAiServerCommunicationException(Exception e, RedirectAttributes redirectAttributes) {
         log.error("AI 서버와 통신 중 오류 발생 : {}", e.getMessage(), e);
-        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+        redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "redirect:/user/request";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public String handleIllegalArgumentException(Exception e, Model model) {
+    public String handleIllegalArgumentException(Exception e, RedirectAttributes redirectAttributes) {
         log.error("IllegalArgumentException 발생 : \n{}", e.getMessage(), e);
-        model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
+        redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
         return "redirect:/user/request";
