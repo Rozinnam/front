@@ -182,12 +182,12 @@
         updateFileInput();
     });
 
-    uploadForm.addEventListener("submit", function (e) {
-        if (fileInput.files.length === 0) {
-            errorText.textContent = "파일을 선택해 주세요.";
-            e.preventDefault();
-        }
-    })
+    // uploadForm.addEventListener("submit", function (e) {
+    //     if (fileInput.files.length === 0) {
+    //         errorText.textContent = "파일을 선택해 주세요.";
+    //         e.preventDefault();
+    //     }
+    // })
 
     function removeFile(file, previewContainer) {
         selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size);
