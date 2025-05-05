@@ -30,6 +30,14 @@
         margin-bottom: 30px;
     }
 
+    .car-part-select {
+        width: 20vw;
+        min-width: 150px;
+        max-width: 300px;
+        display: block;       /* 명시적으로 block 설정 */
+        margin: 0 auto;        /* 🔥 수평 가운데 정렬 */
+    }
+
     .preview-container {
         position: relative;
         display: inline-block;
@@ -77,8 +85,8 @@
     <form method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
             <label for="selectedCarPart">파손된 부품을 선택하세요</label>
-            <select name="selectedCarPart" id="selectedCarPart" class="form-select" required>
-                <option value="">부품을 선택하세요</option>
+            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
+                <option value="" disabled selected hidden>부품을 선택하세요</option>
                 <th:block th:each="part : ${carParts}">
                     <option th:value="${part.name()}" th:text="${part.displayName}"></option>
                 </th:block>
