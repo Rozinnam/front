@@ -2,6 +2,8 @@ package com.example.front.home.controller;
 
 import com.example.front.annotation.CalculateTime;
 import com.example.front.file.service.FileService;
+import com.example.front.pageview.entity.PageType;
+import com.example.front.pageview.service.PageViewCountService;
 import com.example.front.part.domain.CarPart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +25,19 @@ public class HomeController {
     private String appMode;
 
     private final FileService fileService;
+    private final PageViewCountService pageViewCountService;
 
     @GetMapping("/")
     public String home() {
+        pageViewCountService.incrementViewCount(PageType.HOME);
+
         return "user/home";
     }
 
     @GetMapping("/request")
     public String getRequestPage(Model model) {
         model.addAttribute("carParts", CarPart.values());
+        pageViewCountService.incrementViewCount(PageType.REQUEST);
 
         return "user/request";
     }
@@ -50,6 +56,8 @@ public class HomeController {
             model.addAttribute("taskId", result);
             return "user/result_async";
         }
+
+        pageViewCountService.incrementViewCount(PageType.RESULT);
 
         throw new IllegalStateException("앱 모드 설정을 확인해주세요.");
     }
