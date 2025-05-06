@@ -82,7 +82,7 @@
         <h1>자동차 손상 사진을 골라주세요</h1>
     </div>
 
-    <form method="post" action="upload" enctype="multipart/form-data">
+    <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
             <label for="selectedCarPart">파손된 부품을 선택하세요</label>
             <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
@@ -119,6 +119,7 @@
     const customFileButton = document.getElementById("customFileButton");
     const imagePreviewContainer = document.getElementById("imagePreviewContainer");
     const errorText = document.getElementById("errorText");
+    const uploadForm = document.getElementById("uploadForm");
 
     let selectedFiles = [];
 
@@ -180,6 +181,13 @@
 
         updateFileInput();
     });
+
+    uploadForm.addEventListener("submit", function (e) {
+        if (fileInput.files.length === 0) {
+            errorText.textContent = "파일을 선택해 주세요.";
+            e.preventDefault();
+        }
+    })
 
     function removeFile(file, previewContainer) {
         selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size);

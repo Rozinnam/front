@@ -1,5 +1,6 @@
 package com.example.front.home.controller;
 
+import com.example.front.annotation.CalculateTime;
 import com.example.front.file.service.FileService;
 import com.example.front.part.domain.CarPart;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class HomeController {
         return "user/request";
     }
 
+    @CalculateTime
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files,
                          @RequestParam("selectedCarPart") CarPart carPart,
