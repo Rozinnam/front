@@ -4,12 +4,14 @@ import com.example.front.pageview.entity.PageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PageViewCountService {
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -18,6 +20,7 @@ public class PageViewCountService {
         redisTemplate.opsForValue().increment(key);
     }
 
+    @Transactional(readOnly = true)
     public long getViewCount(PageType pageType) {
         String key = "view:" + pageType.getValue();
         String value = redisTemplate.opsForValue().get(key);
@@ -25,6 +28,7 @@ public class PageViewCountService {
         return value == null ? 0 : Long.parseLong(value);
     }
 
+    @Transactional(readOnly = true)
     public Map<PageType, Long> getAllViewCounts() {
         Map<PageType, Long> result = new HashMap<>();
         for (PageType pageType : PageType.values()) {

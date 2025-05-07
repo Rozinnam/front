@@ -1,6 +1,7 @@
 package com.example.front.pageview.scheduler;
 
 import com.example.front.pageview.entity.PageType;
+import com.example.front.pageview.entity.PageView;
 import com.example.front.pageview.repository.PageViewCountRepository;
 import com.example.front.pageview.service.PageViewCountService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,9 @@ public class PageViewCountScheduler {
             PageType pageType = entry.getKey();
             Long count = entry.getValue();
 
-            pageViewCountRepository.saveOrUpdate(date, pageType, count);
+            PageView pageView = new PageView(new PageView.Pk(date, pageType), count);
+
+            pageViewCountRepository.save(pageView);
             pageViewCountService.deleteViewCount(pageType);
         }
     }
