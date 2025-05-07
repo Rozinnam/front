@@ -104,12 +104,12 @@ jobs:
           script: |
             echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > /home/${{ secrets.EC2_USERNAME }}/.env
             echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
-            echo "WEBHOOK_URL=${{ secrets.REDIS_HOST }}" >> /home/${{ secrets.REDIS_HOST }}/.env
-            echo "WEBHOOK_URL=${{ secrets.REDIS_PORT }}" >> /home/${{ secrets.REDIS_PORT }}/.env
-            echo "WEBHOOK_URL=${{ secrets.DB_HOST }}" >> /home/${{ secrets.DB_HOST }}/.env
-            echo "WEBHOOK_URL=${{ secrets.DB_PORT }}" >> /home/${{ secrets.DB_PORT }}/.env
-            echo "WEBHOOK_URL=${{ secrets.DB_USER_NAME }}" >> /home/${{ secrets.DB_USER_NAME }}/.env
-            echo "WEBHOOK_URL=${{ secrets.DB_PASSWORD }}" >> /home/${{ secrets.DB_PASSWORD }}/.env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> /home/${{ secrets.REDIS_HOST }}/.env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> /home/${{ secrets.REDIS_PORT }}/.env
+            echo "DB_HOST=${{ secrets.DB_HOST }}" >> /home/${{ secrets.DB_HOST }}/.env
+            echo "DB_PORT=${{ secrets.DB_PORT }}" >> /home/${{ secrets.DB_PORT }}/.env
+            echo "DB_USER_NAME=${{ secrets.DB_USER_NAME }}" >> /home/${{ secrets.DB_USER_NAME }}/.env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> /home/${{ secrets.DB_PASSWORD }}/.env
             
             sudo docker stop front || true
             sudo docker rm front || true
