@@ -48,6 +48,7 @@ public class HomeController {
                          @RequestParam("selectedCarPart") CarPart carPart,
                          Model model) {
         String result = fileService.communicateWithAiServer(files, carPart);
+        pageViewCountService.incrementViewCount(PageType.RESULT);
 
         if (isSyncMode()) {
             model.addAttribute("result", result);
@@ -56,8 +57,6 @@ public class HomeController {
             model.addAttribute("taskId", result);
             return "user/result_async";
         }
-
-        pageViewCountService.incrementViewCount(PageType.RESULT);
 
         throw new IllegalStateException("앱 모드 설정을 확인해주세요.");
     }
