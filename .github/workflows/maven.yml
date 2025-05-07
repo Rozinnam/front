@@ -37,6 +37,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    # MySQL 세팅
+    - name: Start MySQL
+      uses: samin/mysql-action@v1
+
     # Redis 세팅
     - name: Start Redis
       uses: supercharge/redis-github-action@1.1.0
