@@ -2,13 +2,16 @@ package com.example.front.pageview.service;
 
 import com.example.front.pageview.entity.PageType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -16,13 +19,23 @@ public class PageViewCountService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public void incrementViewCount(PageType pageType) {
-        String key = "view:" + pageType.getValue();
-        redisTemplate.opsForValue().increment(key);
+        String key = getKey(pageType);
+
+        try {
+            Boolean isNew = redisTemplate.opsForValue().setIfAbsent(key, "0");
+            if (Boolean.TRUE.equals(isNew)) {
+                redisTemplate.expire(key, 48, TimeUnit.HOURS);
+            }
+
+            redisTemplate.opsForValue().increment(key);
+        } catch (Exception e) {
+            log.error("조회수 증가시키는 중 오류 발생\n {}", e.getMessage());
+        }
     }
 
     @Transactional(readOnly = true)
     public long getViewCount(PageType pageType) {
-        String key = "view:" + pageType.getValue();
+        String key = getKey(pageType);
         String value = redisTemplate.opsForValue().get(key);
 
         return value == null ? 0 : Long.parseLong(value);
@@ -30,7 +43,7 @@ public class PageViewCountService {
 
     @Transactional(readOnly = true)
     public Map<PageType, Long> getAllViewCounts() {
-        Map<PageType, Long> result = new HashMap<>();
+        Map<PageType, Long> result = new EnumMap<>(PageType.class);
         for (PageType pageType : PageType.values()) {
             result.put(pageType, getViewCount(pageType));
         }
@@ -39,7 +52,11 @@ public class PageViewCountService {
     }
 
     public void deleteViewCount(PageType pageType) {
-        String key = "view:" + pageType.getValue();
+        String key = getKey(pageType);
         redisTemplate.delete(key);
+    }
+
+    private String getKey(PageType pageType) {
+        return "view:" + pageType.getValue();
     }
 }
