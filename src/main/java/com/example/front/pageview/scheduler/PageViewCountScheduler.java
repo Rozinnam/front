@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,23 +24,43 @@ public class PageViewCountScheduler {
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void syncViewCountToDB() {
-        Map<PageType, Long> viewCounts = pageViewCountService.getAllViewCounts();
-        LocalDate date = LocalDate.now().minusDays(1);
-        log.info("Redis -> DB 스케쥴러 시작. 날짜 : {}\n", date);
+        try {
+            log.info("페이지 조회수 동기화 작업 시작");
+            int processedCount = 0;
+            int failedCount = 0;
 
-        for (Map.Entry<PageType, Long> entry : viewCounts.entrySet()) {
-            PageType pageType = entry.getKey();
-            Long count = entry.getValue();
+            Map<PageType, Long> viewCounts = pageViewCountService.getAllViewCounts();
+            LocalDate date = LocalDate.now().minusDays(1);
+            log.info("처리할 페이지 타입 수: {}, 기준일자: {}", viewCounts.size(), date);
 
-            PageView pageView = new PageView(new PageView.Pk(date, pageType), count);
+            for (Map.Entry<PageType, Long> entry : viewCounts.entrySet()) {
+                PageType pageType = entry.getKey();
+                Long count = entry.getValue();
 
-            pageViewCountRepository.save(pageView);
-            log.info("DB에 적재. 날짜 : {}, 페이지 타입 : {}, 조회수 : {}\n",
-                    pageView.getPk().getViewDate(), pageView.getPk().getPageType(), pageView.getViewCount());
+                try {
+                    PageView.Pk pk = new PageView.Pk(date, pageType);
+                    Optional<PageView> existing = pageViewCountRepository.findById(pk);
 
-            pageViewCountService.deleteViewCount(pageType);
-            log.info("Redis에서 삭제. 날짜 : {}, 페이지 타입 : {}, 조회수 : {}\n",
-                    pageView.getPk().getViewDate(), pageView.getPk().getPageType(), pageView.getViewCount());
+                    if (existing.isPresent()) {
+                        PageView pageView = existing.get();
+                        pageView.updateViewCount(count);
+                        pageViewCountRepository.save(pageView);
+                    } else {
+                        pageViewCountRepository.save(new PageView(pk, count));
+                    }
+
+                    pageViewCountService.deleteViewCount(pageType);
+                    processedCount++;
+                    log.debug("페이지 타입 {} 처리 완료: {} 조회수", pageType, count);
+                } catch (Exception e) {
+                    failedCount++;
+                    log.error("페이지 타입 {} 처리 중 오류 발생: {}", pageType, e.getMessage(), e);
+                }
+            }
+            log.info("페이지 조회수 동기화 작업 완료. 성공: {}, 실패: {}", processedCount, failedCount);
+        } catch (Exception e) {
+            log.error("페이지 조회수 동기화 작업 중 오류 발생", e);
+            throw e;
         }
     }
 }
