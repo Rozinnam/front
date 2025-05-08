@@ -116,7 +116,7 @@ jobs:
             sudo docker rmi damho/front:latest || true
             
             sudo docker pull damho/front:latest
-            sudo docker run --env-file .env -d -p 8080:8080 --name front --network dockernetwork damho/front:latest 
+            sudo docker run -e TZ=Asia/Seoul --env-file .env -d -p 8080:8080 --name front --network dockernetwork damho/front:latest 
 
       # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
