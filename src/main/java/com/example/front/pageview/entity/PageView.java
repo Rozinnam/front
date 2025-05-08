@@ -34,4 +34,8 @@ public class PageView {
         @Column(name = "page_id", length = 50)
         private PageType pageType;
     }
+
+    public void updateViewCount(long viewCount) {
+        this.viewCount = viewCount;
+    }
 }
