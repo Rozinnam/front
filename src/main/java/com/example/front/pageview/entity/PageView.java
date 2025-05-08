@@ -25,6 +25,7 @@ public class PageView {
     @AllArgsConstructor
     @EqualsAndHashCode
     @Embeddable
+    @Getter
     public static class Pk implements Serializable {
         @Column(name = "view_date")
         private LocalDate viewDate;
