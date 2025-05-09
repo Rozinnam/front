@@ -5,6 +5,7 @@ import com.example.front.pageview.service.PageViewCountService;
 import com.example.front.user.entity.User;
 import com.example.front.user.entity.UserRole;
 import com.example.front.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String requestLogin(@RequestParam String id, @RequestParam String password, HttpSession session) {
+    public String requestLogin(@RequestParam String id, @RequestParam String password, HttpSession session, HttpServletRequest request) {
+        session.invalidate();
+        session = request.getSession(true);
+
         User user = userService.login(id, password);
         if (user == null) {
             return "redirect:/admin/login";
@@ -58,6 +62,6 @@ public class UserController {
         session.setAttribute("loginUser", user);
         session.setMaxInactiveInterval(600);
 
-        return "admin/home";
+        return "redirect:/admin";
     }
 }
