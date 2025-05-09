@@ -10,6 +10,7 @@
             width: 80%;
         }
     }
+
     /* 로그아웃 버튼 스타일 (상단 우측 고정) */
     .logout-btn {
         position: absolute;
@@ -25,6 +26,7 @@
         transition: background 0.2s;
         z-index: 100;
     }
+
     .logout-btn:hover {
         background: #c62828;
     }
@@ -61,8 +63,8 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#searchBtn').click(function() {
+        $(document).ready(function () {
+            $('#searchBtn').click(function () {
                 const selectedDate = $('#dateInput').val();
                 if (!selectedDate) {
                     alert('날짜를 선택하세요!');
@@ -72,25 +74,28 @@
                 $.ajax({
                     url: '/api/pageview',
                     type: 'GET',
-                    data: { date: selectedDate },
-                    success: function(data) {
+                    data: {date: selectedDate},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
                         let html = '';
                         if (data.length === 0) {
                             html = '<p>해당 날짜의 조회수 데이터가 없습니다.</p>';
                         } else {
                             html = '<table border="1"><tr><th>페이지 타입</th><th>조회수</th></tr>';
-                            data.forEach(function(data) {
+                            data.forEach(function (data) {
                                 html += '<tr>';
-                                html += '<td>' + data.pk.pageType + '</td>';
-                                html += '<td>' + data.viewCount + '</td>';
+                                html += '<td>' + $('<div>').text(data.pk.pageType).html() + '</td>';
+                                html += '<td>' + $('<div>').text(data.viewCount).html() + '</td>';
                                 html += '</tr>';
                             });
                             html += '</table>';
                         }
                         $('#resultArea').html(html);
                     },
-                    error: function(xhr) {
-                        alert('조회 중 오류가 발생했습니다: ' + xhr.responseText);
+                    error: function (xhr) {
+                        alert('조회 중 오류가 발생했습니다: 관리자에게 문의하세요.');
                     }
                 });
             });
