@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+
+<style>
+    @media (max-width: 600px) {
+        input[type="file"] {
+            width: 80%;
+        }
+    }
+</style>
+
+<body>
+<div>
+    <form action="/login" method="post">
+        <input type="text" name="id" placeholder="ID"/>
+        <input type="password" name="password" placeholder="Password"/>
+        <button type="submit">로그인</button>
+    </form>
+</div>
+</body>
+
+</html>

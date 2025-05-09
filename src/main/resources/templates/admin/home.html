@@ -1,10 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
 
+<style>
+    @media (max-width: 600px) {
+        input[type="file"] {
+            width: 80%;
+        }
+    }
+</style>
+
+<body>
+<div>
+    <p>유용준이 원하는 오늘의 조회수</p>
+    <table>
+        <tr>
+            <th>Page Type</th>
+            <th>View Count</th>
+        </tr>
+        <tr th:each="entry : ${viewCounts}">
+            <td th:text="${entry.key}"></td>
+            <td th:text="${entry.value}"></td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <h2>날짜별 페이지 조회수 조회</h2>
+    <label for="dateInput">날짜 선택:</label>
+    <input type="date" id="dateInput" name="dateInput">
+    <button id="searchBtn">조회</button>
+
+    <div id="resultArea" style="margin-top:20px;">
+        <!-- 결과가 여기에 표시됩니다 -->
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#searchBtn').click(function() {
+                const selectedDate = $('#dateInput').val();
+                if (!selectedDate) {
+                    alert('날짜를 선택하세요!');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/api/pageview',
+                    type: 'GET',
+                    data: { date: selectedDate },
+                    success: function(data) {
+                        let html = '';
+                        if (data.length === 0) {
+                            html = '<p>해당 날짜의 조회수 데이터가 없습니다.</p>';
+                        } else {
+                            html = '<table border="1"><tr><th>페이지 타입</th><th>조회수</th></tr>';
+                            data.forEach(function(data) {
+                                html += '<tr>';
+                                html += '<td>' + data.pk.pageType + '</td>';
+                                html += '<td>' + data.viewCount + '</td>';
+                                html += '</tr>';
+                            });
+                            html += '</table>';
+                        }
+                        $('#resultArea').html(html);
+                    },
+                    error: function(xhr) {
+                        alert('조회 중 오류가 발생했습니다: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</div>
 </body>
+
 </html>

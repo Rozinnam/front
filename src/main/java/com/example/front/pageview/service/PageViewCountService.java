@@ -1,13 +1,17 @@
 package com.example.front.pageview.service;
 
+import com.example.front.pageview.dto.response.PageViewGetResponse;
 import com.example.front.pageview.entity.PageType;
+import com.example.front.pageview.repository.PageViewCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class PageViewCountService {
     private final RedisTemplate<String, String> redisTemplate;
+    private final PageViewCountRepository pageViewCountRepository;
 
     public void incrementViewCount(PageType pageType) {
         String key = getKey(pageType);
@@ -62,6 +67,11 @@ public class PageViewCountService {
         Boolean result = redisTemplate.delete(key);
 
         return Boolean.TRUE.equals(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PageViewGetResponse> getPageViewByDate(LocalDate date) {
+        return pageViewCountRepository.findByPk_ViewDate(date);
     }
 
     private String getKey(PageType pageType) {
