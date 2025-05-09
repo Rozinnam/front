@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("")
     public String getAdminPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loginUser");
-        if (user != null && UserRole.ADMIN != user.getRole()) {
+        if (user == null || UserRole.ADMIN != user.getRole()) {
             return "redirect:/admin/login";
         }
 
