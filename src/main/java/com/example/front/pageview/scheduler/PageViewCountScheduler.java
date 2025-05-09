@@ -21,7 +21,7 @@ public class PageViewCountScheduler {
     private final PageViewCountService pageViewCountService;
     private final PageViewCountRepository pageViewCountRepository;
 
-    @Scheduled(cron = "0 10 11 * * *")
+    @Scheduled(cron = "0 5 0 * * *")
     @Transactional
     public void syncViewCountToDB() {
         try {
