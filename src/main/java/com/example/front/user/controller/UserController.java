@@ -28,11 +28,18 @@ public class UserController {
         return "admin/login";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+
+        return "redirect:/admin";
+    }
+
+    @GetMapping("")
     public String getAdminPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loginUser");
         if (user != null && UserRole.ADMIN != user.getRole()) {
-            return "redirect:/login";
+            return "redirect:/admin/login";
         }
 
         Map<PageType, Long> viewCounts = pageViewCountService.getAllViewCounts();
@@ -45,10 +52,12 @@ public class UserController {
     public String requestLogin(@RequestParam String id, @RequestParam String password, HttpSession session) {
         User user = userService.login(id, password);
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/admin/login";
         }
 
         session.setAttribute("loginUser", user);
+        session.setMaxInactiveInterval(600);
+
         return "admin/home";
     }
 }
