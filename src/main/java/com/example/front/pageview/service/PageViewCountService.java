@@ -51,9 +51,11 @@ public class PageViewCountService {
         return result;
     }
 
-    public void deleteViewCount(PageType pageType) {
+    public boolean deleteViewCount(PageType pageType) {
         String key = getKey(pageType);
-        redisTemplate.delete(key);
+        Boolean result = redisTemplate.delete(key);
+
+        return Boolean.TRUE.equals(result);
     }
 
     private String getKey(PageType pageType) {

@@ -21,7 +21,7 @@ public class PageViewCountScheduler {
     private final PageViewCountService pageViewCountService;
     private final PageViewCountRepository pageViewCountRepository;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 10 45 * * *")
     @Transactional
     public void syncViewCountToDB() {
         try {
@@ -49,7 +49,12 @@ public class PageViewCountScheduler {
                         pageViewCountRepository.save(new PageView(pk, count));
                     }
 
-                    pageViewCountService.deleteViewCount(pageType);
+                    if (pageViewCountService.deleteViewCount(pageType)) {
+                        log.info("Redis key : {} 삭제 성공", pageType);
+                    } else {
+                        log.info("Redis key : {} 삭제 실패", pageType);
+                    }
+
                     processedCount++;
                     log.debug("페이지 타입 {} 처리 완료: {} 조회수", pageType, count);
                 } catch (Exception e) {
