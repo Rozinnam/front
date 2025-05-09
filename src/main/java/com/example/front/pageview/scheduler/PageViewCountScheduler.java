@@ -56,7 +56,7 @@ public class PageViewCountScheduler {
                     }
 
                     processedCount++;
-                    log.debug("페이지 타입 {} 처리 완료: {} 조회수", pageType, count);
+                    log.info("페이지 타입 {} 처리 완료: {} 조회수", pageType, count);
                 } catch (Exception e) {
                     failedCount++;
                     log.error("페이지 타입 {} 처리 중 오류 발생: {}", pageType, e.getMessage(), e);
