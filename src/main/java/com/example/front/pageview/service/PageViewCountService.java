@@ -53,6 +53,12 @@ public class PageViewCountService {
 
     public boolean deleteViewCount(PageType pageType) {
         String key = getKey(pageType);
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
+            log.error("Redis key : {} 존재하지 않음", key);
+
+            return false;
+        }
+
         Boolean result = redisTemplate.delete(key);
 
         return Boolean.TRUE.equals(result);
