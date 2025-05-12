@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
@@ -22,9 +23,16 @@ import java.util.concurrent.TimeUnit;
 public class PageViewCountService {
     private final RedisTemplate<String, String> redisTemplate;
     private final PageViewCountRepository pageViewCountRepository;
+    private static final long EXPIRE_SECONDS = 30L * 60L; // 30분
 
-    public void incrementViewCount(PageType pageType) {
-        String key = getKey(pageType);
+    public void handleViewCount(String clientIP, PageType pageType) {
+        if (shouldCountView(clientIP, pageType)) {
+            incrementViewCount(pageType);
+        }
+    }
+
+    private void incrementViewCount(PageType pageType) {
+        String key = getPageViewKey(pageType);
 
         try {
             Boolean isNew = redisTemplate.opsForValue().setIfAbsent(key, "0");
@@ -40,7 +48,7 @@ public class PageViewCountService {
 
     @Transactional(readOnly = true)
     public long getViewCount(PageType pageType) {
-        String key = getKey(pageType);
+        String key = getPageViewKey(pageType);
         String value = redisTemplate.opsForValue().get(key);
 
         return value == null ? 0 : Long.parseLong(value);
@@ -57,7 +65,7 @@ public class PageViewCountService {
     }
 
     public boolean deleteViewCount(PageType pageType) {
-        String key = getKey(pageType);
+        String key = getPageViewKey(pageType);
         if (Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
             log.error("Redis key : {} 존재하지 않음", key);
 
@@ -74,7 +82,23 @@ public class PageViewCountService {
         return pageViewCountRepository.findByPk_ViewDate(date);
     }
 
-    private String getKey(PageType pageType) {
+    private String getPageViewKey(PageType pageType) {
         return "view:" + pageType.getValue();
+    }
+
+    private String getClientPageViewKey(String clientIP, PageType pageType) {
+        return pageType.getValue() + ":" + clientIP;
+    }
+
+    private boolean shouldCountView(String clientIP, PageType pageType) {
+        String key = getClientPageViewKey(clientIP, pageType);
+        Boolean exists = redisTemplate.hasKey(key);
+        if (Boolean.TRUE.equals(exists)) {
+            return false;
+        }
+
+        // 키가 없으면 조회수 증가 대상, 30분 TTL 설정
+        redisTemplate.opsForValue().set(key, "1", Duration.ofSeconds(EXPIRE_SECONDS));
+        return true;
     }
 }

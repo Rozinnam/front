@@ -5,6 +5,7 @@ import com.example.front.file.service.FileService;
 import com.example.front.pageview.entity.PageType;
 import com.example.front.pageview.service.PageViewCountService;
 import com.example.front.part.domain.CarPart;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,16 +29,16 @@ public class HomeController {
     private final PageViewCountService pageViewCountService;
 
     @GetMapping("/")
-    public String home() {
-        pageViewCountService.incrementViewCount(PageType.HOME);
+    public String home(HttpServletRequest request) {
+        pageViewCountService.handleViewCount(getClientIP(request), PageType.HOME);
 
         return "user/home";
     }
 
     @GetMapping("/request")
-    public String getRequestPage(Model model) {
+    public String getRequestPage(HttpServletRequest request, Model model) {
         model.addAttribute("carParts", CarPart.values());
-        pageViewCountService.incrementViewCount(PageType.REQUEST);
+        pageViewCountService.handleViewCount(getClientIP(request), PageType.REQUEST);
 
         return "user/request";
     }
@@ -46,9 +47,10 @@ public class HomeController {
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files,
                          @RequestParam("selectedCarPart") CarPart carPart,
+                         HttpServletRequest request,
                          Model model) {
         String result = fileService.communicateWithAiServer(files, carPart);
-        pageViewCountService.incrementViewCount(PageType.RESULT);
+        pageViewCountService.handleViewCount(getClientIP(request), PageType.RESULT);
 
         if (isSyncMode()) {
             model.addAttribute("result", result);
@@ -67,5 +69,14 @@ public class HomeController {
 
     private boolean isAsyncMode() {
         return appMode.equalsIgnoreCase("async");
+    }
+
+    private String getClientIP(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader != null) {
+            return xfHeader.split(", ")[0].trim();
+        }
+
+        return request.getRemoteAddr();
     }
 }
