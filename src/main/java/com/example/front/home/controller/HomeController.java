@@ -73,8 +73,6 @@ public class HomeController {
 
     private String getClientIP(HttpServletRequest request) {
         String xfHeader = request.getHeader("X-Forwarded-For");
-        log.info("X-Forwarded-For: {}", xfHeader);
-        log.info("RemoteAddr: {}", request.getRemoteAddr());
 
         if (xfHeader != null) {
             return xfHeader.split(", ")[0].trim();
