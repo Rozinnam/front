@@ -92,13 +92,22 @@ public class PageViewCountService {
 
     private boolean shouldCountView(String clientIP, PageType pageType) {
         String key = getClientPageViewKey(clientIP, pageType);
-        Boolean exists = redisTemplate.hasKey(key);
-        if (Boolean.TRUE.equals(exists)) {
-            return false;
+
+        try {
+            Boolean exists = redisTemplate.hasKey(key);
+            if (Boolean.TRUE.equals(exists)) {
+                return false;
+            }
+
+            // 키가 없으면 조회수 증가 대상, 30분 TTL 설정
+            redisTemplate.opsForValue().set(key, "1", Duration.ofSeconds(EXPIRE_SECONDS));
+            return true;
+        } catch (Exception e) {
+            log.error("클라이언트 조회 이력 확인 중 오류 발생\n {}", e.getMessage());
+
+            //Redis 오류 발생 시 조회수 즈악 허용 (보수적 접근)
+            return true;
         }
 
-        // 키가 없으면 조회수 증가 대상, 30분 TTL 설정
-        redisTemplate.opsForValue().set(key, "1", Duration.ofSeconds(EXPIRE_SECONDS));
-        return true;
     }
 }
