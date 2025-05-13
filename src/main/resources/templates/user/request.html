@@ -74,9 +74,47 @@
         transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
+
+    h2 {
+        font-size: 17px;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+
+    p {
+        margin-bottom: 12px;
+    }
+
+    ul {
+        padding-left: 20px;
+        margin-bottom: 12px;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    strong {
+        font-weight: 600;
+    }
 </style>
 
 <body>
+<div class="center-location">
+    <h2>📷 정확한 예측을 위한 사진 촬영 방법</h2>
+    <p>정확한 수리비 예측을 위해 아래의 촬영 방법을 따라 주세요.</p>
+    <ul>
+        <li>차량과 <strong>약 1m 거리</strong>에서 <strong>정면 방향</strong>으로 촬영해 주세요.</li>
+        <li><strong>밝은 장소</strong>에서 선명하게 찍어 주세요.</li>
+        <li><strong>한 번에 한 장</strong>, <strong>한 부위씩</strong> 업로드해 주세요.</li>
+    </ul>
+    <p><strong>좋은 예시</strong></p>
+    <img src="/images/good_case.png" alt="좋은 예시" class="preview-image">
+    <p><strong>나쁜 예시</strong></p>
+    <img src="/images/bad_case.png" alt="나쁜 예시" class="preview-image">
+</div>
+
 <div class="center-location">
     <div class="margin-bottom">
         <h1>자동차 손상 사진을 골라주세요</h1>
@@ -94,7 +132,7 @@
         <div class="margin-bottom">
             <label for="selectedCarPart">파손된 부품을 선택하세요</label>
             <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
-                <option value="" disabled selected hidden>부품을 선택하세요</option>
+                <option value="" class="margin-bottom" disabled selected hidden>부품을 선택하세요</option>
                 <th:block th:each="part : ${carParts}">
                     <option th:value="${part.name()}" th:text="${part.displayName}"></option>
                 </th:block>
