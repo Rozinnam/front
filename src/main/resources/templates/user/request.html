@@ -109,26 +109,29 @@
         <li><strong>밝은 장소</strong>에서 선명하게 찍어 주세요.</li>
         <li><strong>한 번에 한 장</strong>, <strong>한 부위씩</strong> 업로드해 주세요.</li>
     </ul>
-    <p><strong>좋은 예시</strong></p>
-    <img src="/images/good_case.png" alt="좋은 예시" class="preview-image">
-    <p><strong>나쁜 예시</strong></p>
-    <img src="/images/bad_case.png" alt="나쁜 예시" class="preview-image">
+
+    <div class="preview-container">
+        <p><strong>좋은 예시</strong></p>
+        <img src="/images/good_case.png" alt="좋은 예시" class="preview-image">
+        <p><strong>나쁜 예시</strong></p>
+        <img src="/images/bad_case.png" alt="나쁜 예시" class="preview-image">
+    </div>
 </div>
 
 <div class="center-location">
-    <div class="margin-bottom">
-        <h1>자동차 손상 사진을 골라주세요</h1>
-    </div>
-
-    <div class="margin-bottom">
-        <!-- 숨겨진 파일 선택 input -->
-        <input type="file" name="files" multiple id="fileInput">
-
-        <!-- 사용자 정의 파일 선택 버튼 -->
-        <button type="button" id="customFileButton">파일 선택</button>
-    </div>
-
     <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
+        <div class="margin-bottom">
+            <h1>자동차 손상 사진을 골라주세요</h1>
+        </div>
+
+        <div class="margin-bottom">
+            <!-- 숨겨진 파일 선택 input -->
+            <input type="file" name="files" multiple id="fileInput">
+
+            <!-- 사용자 정의 파일 선택 버튼 -->
+            <button type="button" id="customFileButton">파일 선택</button>
+        </div>
+
         <div class="margin-bottom">
             <label for="selectedCarPart">파손된 부품을 선택하세요</label>
             <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
