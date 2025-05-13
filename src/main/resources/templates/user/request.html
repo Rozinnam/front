@@ -75,6 +75,18 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
+    .image-row {
+        display: flex;
+        gap: 24px; /* 이미지 사이 간격 */
+        justify-content: center; /* 가운데 정렬 (선택) */
+        align-items: flex-start; /* 위쪽 정렬 (필요시) */
+    }
+
+    figure {
+        margin: 0;
+        text-align: center;
+    }
+
     h2 {
         font-size: 17px;
         margin-top: 24px;
@@ -110,11 +122,15 @@
         <li><strong>한 번에 한 장</strong>, <strong>한 부위씩</strong> 업로드해 주세요.</li>
     </ul>
 
-    <div class="preview-container">
-        <p><strong>좋은 예시</strong></p>
-        <img src="/images/good_case.png" alt="좋은 예시" class="preview-image">
-        <p><strong>나쁜 예시</strong></p>
-        <img src="/images/bad_case.png" alt="나쁜 예시" class="preview-image">
+    <div class="image-row">
+        <figure>
+            <img src="/images/good_case.png" alt="좋은 예시" class="preview-image">
+            <figcaption><strong>좋은 예시</strong></figcaption>
+        </figure>
+        <figure>
+            <img src="/images/bad_case.png" alt="나쁜 예시" class="preview-image">
+            <figcaption><strong>나쁜 예시</strong></figcaption>
+        </figure>
     </div>
 </div>
 
