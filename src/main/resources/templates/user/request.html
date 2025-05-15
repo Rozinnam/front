@@ -189,6 +189,7 @@
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const MAX_FILE_COUNT = 10;
         const MAX_FILE_SIZE = 1 * 1024 * 1024;
+        const MB = 1024 * 1024;
         errorText.textContent = "";
 
         if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
@@ -203,7 +204,7 @@
             }
 
             if (file.size > MAX_FILE_SIZE) {
-                errorText.textContent = "각 파일은 최대 " + MAX_FILE_SIZE + "MB까지 업로드 가능합니다.";
+                errorText.textContent = "각 파일은 최대 " + (MAX_FILE_SIZE / MB) + "MB까지 업로드 가능합니다.";
                 return;
             }
 
