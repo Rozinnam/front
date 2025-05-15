@@ -135,6 +135,10 @@
 </div>
 
 <div class="center-location">
+    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+</div>
+
+<div class="center-location">
     <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
             <h1>자동차 손상 사진을 골라주세요</h1>
@@ -165,10 +169,6 @@
             <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
         </div>
     </form>
-</div>
-
-<div class="center-location">
-    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
 </div>
 
 <script>
