@@ -40,7 +40,7 @@ public class HomeController {
         model.addAttribute("carParts", CarPart.values());
         pageViewCountService.handleViewCount(getClientIP(request), PageType.REQUEST);
 
-        return "user/request";
+        return "user/home";
     }
 
     @CalculateTime
