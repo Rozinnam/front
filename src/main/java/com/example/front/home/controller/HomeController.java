@@ -28,14 +28,14 @@ public class HomeController {
     private final FileService fileService;
     private final PageViewCountService pageViewCountService;
 
+//    @GetMapping("/")
+//    public String home(HttpServletRequest request) {
+//        pageViewCountService.handleViewCount(getClientIP(request), PageType.HOME);
+//
+//        return "user/home";
+//    }
+
     @GetMapping("/")
-    public String home(HttpServletRequest request) {
-        pageViewCountService.handleViewCount(getClientIP(request), PageType.HOME);
-
-        return "user/home";
-    }
-
-    @GetMapping("/request")
     public String getRequestPage(HttpServletRequest request, Model model) {
         model.addAttribute("carParts", CarPart.values());
         pageViewCountService.handleViewCount(getClientIP(request), PageType.REQUEST);
