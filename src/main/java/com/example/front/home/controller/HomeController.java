@@ -36,7 +36,7 @@ public class HomeController {
 //    }
 
     @GetMapping("/")
-    public String getRequestPage(HttpServletRequest request, Model model) {
+    public String getHomePage(HttpServletRequest request, Model model) {
         model.addAttribute("carParts", CarPart.values());
         pageViewCountService.handleViewCount(getClientIP(request), PageType.REQUEST);
 
