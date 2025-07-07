@@ -121,10 +121,10 @@
     <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
         <div class="margin-bottom">
             <!-- 숨겨진 파일 선택 input -->
-            <input type="file" name="files" multiple id="fileInput">
+            <input type="file" name="files" multiple id="fileInput" accept="image/*">
 
             <!-- 사용자 정의 파일 선택 버튼 -->
-            <button type="button" id="customFileButton">사진 선택</button>
+            <button type="button" id="customFileButton" aria-label="파일 선택(이미지 업로드)" aria-controls="fileInput">사진 선택</button>
         </div>
 
         <div class="margin-bottom">
@@ -168,6 +168,7 @@
 
         if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
             errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
+            event.target.value = "";
             return;
         }
 
@@ -193,6 +194,7 @@
                     const imgElement = document.createElement("img");
                     imgElement.src = e.target.result;
                     imgElement.classList.add("preview-image");
+                    imgElement.alt = file.name;
 
                     const removeButton = document.createElement("button");
                     removeButton.innerHTML = "&#10006;"; // X 아이콘
