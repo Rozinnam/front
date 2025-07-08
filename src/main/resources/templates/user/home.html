@@ -38,6 +38,15 @@
         margin: 0 auto;        /* 🔥 수평 가운데 정렬 */
     }
 
+    .uniform-width {
+        width: 20vw;
+        min-width: 150px;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+
     .preview-container {
         position: relative;
         display: inline-block;
@@ -124,11 +133,11 @@
             <input type="file" name="files" multiple id="fileInput" accept="image/*">
 
             <!-- 사용자 정의 파일 선택 버튼 -->
-            <button type="button" id="customFileButton" aria-label="파일 선택(이미지 업로드)" aria-controls="fileInput">사진 선택</button>
+            <button type="button" id="customFileButton" class="uniform-width" aria-label="파일 선택(이미지 업로드)" aria-controls="fileInput">사진 선택</button>
         </div>
 
         <div class="margin-bottom">
-            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
+            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select uniform-width" required aria-required="true">
                 <option value="" class="margin-bottom" disabled selected hidden>파손된 부품을 선택하세요</option>
                 <th:block th:each="part : ${carParts}">
                     <option th:value="${part.name()}" th:text="${part.displayName}"></option>
@@ -140,7 +149,7 @@
         <div id="imagePreviewContainer"></div>
 
         <div class="margin-bottom">
-            <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+            <button type="submit" class="uniform-width" th:text="견적받기" class="btn btn-dark"></button>
         </div>
     </form>
 </div>
