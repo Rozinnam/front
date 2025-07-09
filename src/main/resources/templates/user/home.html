@@ -114,18 +114,12 @@
 
 <body>
 <div class="center-location">
-    <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
-</div>
-
-<div class="center-location">
-    <div class="image-row">
+    <div class="image-row margin-bottom">
         <figure>
             <img src="/images/before_accident.jpg" alt="수리 전" class="preview-image">
-            <figcaption><strong>좋은 예시</strong></figcaption>
         </figure>
         <figure>
             <img src="/images/after_accident.jpg" alt="수리 후" class="preview-image">
-            <figcaption><strong>나쁜 예시</strong></figcaption>
         </figure>
     </div>
 
@@ -149,6 +143,10 @@
 
         <!-- 이미지 미리보기 -->
         <div id="imagePreviewContainer"></div>
+
+        <div class="center-location">
+            <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+        </div>
 
         <div class="margin-bottom">
             <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
