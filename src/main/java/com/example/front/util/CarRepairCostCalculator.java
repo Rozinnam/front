@@ -3,6 +3,8 @@ package com.example.front.util;
 import com.example.front.file.dto.response.ResponseDto;
 import com.example.front.part.domain.CarPart;
 
+import java.text.DecimalFormat;
+
 import static org.springframework.web.util.HtmlUtils.htmlEscape;
 
 public class CarRepairCostCalculator {
@@ -39,7 +41,7 @@ public class CarRepairCostCalculator {
 
     private static String generateMessage(ResponseDto responseDto, CarPart carPart) {
         if (isReplacementRecommended(responseDto, carPart)) {
-            return "교체 추천" + NEW_LINE + "비용 : " + carPart.getReplacementCost() + "원";
+            return "교체 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(carPart.getReplacementCost()) + "원";
         }
 
         int repairCost = roundToUnit(calculateRepairCost(responseDto, carPart));
@@ -48,13 +50,14 @@ public class CarRepairCostCalculator {
 
         // 수리 비용이 교체 비용보다 크면 교체 추천
         if (repairCost > replacementCost) {
-            return "교체 추천" + NEW_LINE + "비용 : " + replacementCost + "원";
+            return "교체 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(replacementCost) + "원";
             // 수리 비용이 교체 비용의 45~55% 범위이면 두 옵션 모두 제시
         } else if (percent >= 45 && percent < 55) {
-            return "교체 비용 : " + replacementCost + NEW_LINE + "판금 및 도색 비용 : " + repairCost + "원";
+            return "교체 비용 : " + addThousandsSeparator(replacementCost) + NEW_LINE + "판금 및 도색 비용 : "
+                    + addThousandsSeparator(repairCost) + "원";
             // 그 외의 경우 수리 추천
         } else {
-            return "판금 및 도색 추천" + NEW_LINE + "비용 : " + repairCost + "원";
+            return "판금 및 도색 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(repairCost) + "원";
         }
     }
 
@@ -145,5 +148,9 @@ public class CarRepairCostCalculator {
         String escaped = htmlEscape(message);
 
         return escaped.replace(NEW_LINE, HTML_NEW_LINE);
+    }
+
+    private static String addThousandsSeparator(int amount) {
+        return new DecimalFormat("#,###").format(amount);
     }
 }
