@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="header-back" onclick="history.back()">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="header-title">견적 요청</h1>
+            <div style="width: 40px;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Upload Form -->
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <!-- Part Selection -->
+            <div class="card mb-lg">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="selectedCarPart" class="form-label">손상 부위 선택</label>
+                        <select id="selectedCarPart" name="selectedCarPart" class="form-select" required>
+                            <option value="">부위를 선택해주세요</option>
+                            <option th:each="part : ${carParts}"
+                                    th:value="${part}"
+                                    th:text="${part.displayName}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="card mb-lg">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">사진 업로드 (최대 5장)</label>
+
+                        <!-- Upload Area -->
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="fileInput" name="files" multiple accept="image/*" style="display: none;">
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24" class="upload-icon mb-md">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                </svg>
+                                <p class="upload-text mb-md">사진을 선택하거나 드래그하세요</p>
+                                <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('fileInput').click()">
+                                    파일 선택
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Preview Area -->
+                        <div id="previewArea" class="preview-grid" style="display: none;">
+                            <!-- 업로드된 이미지들이 여기에 표시됩니다 -->
+                        </div>
+
+                        <p class="text-xs text-muted mt-sm">
+                            여러 각도에서 촬영하면 더 정확한 견적을 받을 수 있습니다
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-large btn-full" disabled>
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+                </svg>
+                견적 분석 시작
+            </button>
+        </form>
+
+        <!-- Tips Section -->
+        <div class="card mt-xl">
+            <div class="card-body">
+                <h4 class="mb-md">촬영 가이드</h4>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <div class="tip-icon">💡</div>
+                        <div>
+                            <p class="tip-title">밝은 환경</p>
+                            <p class="tip-desc">자연광 또는 충분한 조명</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">📏</div>
+                        <div>
+                            <p class="tip-title">적절한 거리</p>
+                            <p class="tip-desc">차량과 1m 정도 거리</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">🎯</div>
+                        <div>
+                            <p class="tip-title">정면 촬영</p>
+                            <p class="tip-desc">손상 부위가 선명하게</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">📱</div>
+                        <div>
+                            <p class="tip-title">흔들림 방지</p>
+                            <p class="tip-desc">안정적으로 촬영</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="bottom-nav-label">홈</span>
+        </a>
+        <a href="/request" class="bottom-nav-item active">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            <span class="bottom-nav-label">견적</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span class="bottom-nav-label">센터</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span class="bottom-nav-label">내역</span>
+        </a>
+    </nav>
+
+    <style>
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            background-color: var(--bg-secondary);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background-color: var(--bg-primary);
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--accent);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .upload-icon {
+            color: var(--text-muted);
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .btn-sm {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.75rem;
+            min-height: 36px;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background-color: var(--bg-tertiary);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: var(--space-xs);
+            right: var(--space-xs);
+            width: 24px;
+            height: 24px;
+            background-color: rgba(220, 38, 38, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .tip-item {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .tip-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--text-primary);
+        }
+
+        .tip-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        @media (max-width: 640px) {
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script src="/js/upload-form.js"></script>
+</body>
+</html>

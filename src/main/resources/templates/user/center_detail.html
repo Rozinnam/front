@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="header-back" onclick="history.back()">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="header-title">카센터 정보</h1>
+            <div style="width: 40px;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Service Center Info -->
+        <div class="center-detail-card">
+            <div class="center-header">
+                <h2 class="center-name" th:text="${serviceCenter.name}"></h2>
+                <div class="center-rating">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span th:text="${serviceCenter.rating}"></span>
+                </div>
+            </div>
+
+            <p class="center-description" th:text="${serviceCenter.description}"></p>
+
+            <div class="center-info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">주소</p>
+                        <p class="info-value" th:text="${serviceCenter.address}"></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 8.5l3.5 2.5 0 3-3.5-2.5L8.5 14l0-3L12 8.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">운영시간</p>
+                        <p class="info-value" th:text="${serviceCenter.operatingHours}"></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">전화번호</p>
+                        <p class="info-value" th:text="${serviceCenter.phoneNumber}"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="center-actions">
+                <button class="btn btn-primary btn-full" th:onclick="'window.open(\'tel:\' + \'' + ${serviceCenter.phoneNumber} + '\')'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                    </svg>
+                    전화 문의
+                </button>
+                <button class="btn btn-outline btn-full mt-md" onclick="openMap()">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    길찾기
+                </button>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <h3 class="section-title">고객 리뷰</h3>
+            <div class="reviews-list">
+                <div th:each="review : ${serviceCenter.reviews}" class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                <span th:text="${#strings.substring(review.customerName, 0, 1)}"></span>
+                            </div>
+                            <div>
+                                <p class="reviewer-name" th:text="${review.customerName}"></p>
+                                <div class="review-rating">
+                                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                        <svg width="14" height="14" th:classappend="${i <= review.rating} ? 'star-filled' : 'star-empty'" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="review-date" th:text="${#temporals.format(review.createdAt, 'MM.dd')}"></span>
+                    </div>
+                    <p class="review-comment" th:text="${review.comment}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="bottom-nav-label">홈</span>
+        </a>
+        <a href="/request" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            <span class="bottom-nav-label">견적</span>
+        </a>
+        <a href="#" class="bottom-nav-item active">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span class="bottom-nav-label">센터</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span class="bottom-nav-label">내역</span>
+        </a>
+    </nav>
+
+    <style>
+        .center-detail-card {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .center-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+        }
+
+        .center-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .center-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background-color: var(--bg-tertiary);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+        }
+
+        .center-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+        }
+
+        .center-info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .info-item {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
+        }
+
+        .info-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin: 0 0 var(--space-xs) 0;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .center-actions {
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .reviews-section {
+            margin-top: var(--space-xl);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 var(--space-lg) 0;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .review-card {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+        }
+
+        .reviewer-info {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .reviewer-name {
+            font-weight: 500;
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--text-primary);
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star-filled {
+            color: #fbbf24;
+        }
+
+        .star-empty {
+            color: var(--border);
+        }
+
+        .review-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .review-comment {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+
+    <script th:inline="javascript">
+        const serviceCenter = /*[[${serviceCenter}]]*/ {};
+
+        function openMap() {
+            const address = encodeURIComponent(serviceCenter.address);
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // 모바일에서는 앱으로 연결
+                window.open(`https://map.kakao.com/link/search/${address}`);
+            } else {
+                // 데스크톱에서는 새 창으로
+                window.open(`https://map.kakao.com/link/search/${address}`, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>

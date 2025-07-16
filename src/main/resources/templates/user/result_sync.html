@@ -5,7 +5,180 @@
       layout:fragment="content">
 
 <body>
-<div>
-    <p th:utext="${result}"></p>
-</div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="header-back" onclick="history.back()">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="header-title">견적 결과</h1>
+            <div style="width: 40px;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Result -->
+        <div th:utext="${result}"></div>
+
+        <!-- Service Centers -->
+        <div class="service-centers-section">
+            <div class="section-header">
+                <h3>추천 카센터</h3>
+                <div class="sort-toggle">
+                    <button class="sort-option active" data-sort="rating">평점순</button>
+                    <button class="sort-option" data-sort="distance">거리순</button>
+                </div>
+            </div>
+
+            <div class="service-centers-list">
+                <div th:each="center : ${serviceCenters}" class="service-center-card" th:onclick="'location.href=\'/center/\' + ${center.id}'">
+                    <div class="service-center-header">
+                        <div>
+                            <h4 class="service-center-name" th:text="${center.name}"></h4>
+                            <div class="service-center-rating">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <span th:text="${center.rating}"></span>
+                            </div>
+                        </div>
+                        <div class="service-center-actions">
+                            <button class="btn-icon" th:onclick="'event.stopPropagation(); window.open(\'tel:\' + \'' + ${center.phoneNumber} + '\')'">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="service-center-info">
+                        <p class="service-center-address" th:text="${center.address}"></p>
+                        <p class="service-center-hours" th:text="${center.operatingHours}"></p>
+                        <p class="service-center-description" th:text="${center.description}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/request" class="btn btn-outline btn-full">새 견적 요청</a>
+            <button class="btn btn-primary btn-full mt-md" onclick="shareResult()">결과 공유</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="bottom-nav-label">홈</span>
+        </a>
+        <a href="/request" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            <span class="bottom-nav-label">견적</span>
+        </a>
+        <a href="#" class="bottom-nav-item active">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span class="bottom-nav-label">센터</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span class="bottom-nav-label">내역</span>
+        </a>
+    </nav>
+
+    <style>
+        .service-centers-section {
+            margin-top: var(--space-xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .service-centers-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .service-center-description {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: var(--space-sm);
+            line-height: 1.4;
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background-color: var(--accent-light);
+            transform: scale(1.05);
+        }
+
+        .action-buttons {
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+        }
+    </style>
+
+    <script>
+        // Sort functionality
+        document.querySelectorAll('.sort-option').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.sort-option').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Here you would implement actual sorting logic
+                // For now, it's just visual feedback
+            });
+        });
+
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '자동차 수리비 견적 결과',
+                    text: '견적 결과를 확인해보세요!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('링크가 클립보드에 복사되었습니다!');
+                });
+            }
+        }
+    </script>
 </body>
+</html>
