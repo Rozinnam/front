@@ -2,6 +2,7 @@ package com.ggiiig.util;
 
 import com.ggiiig.file.dto.response.ResponseDto;
 import com.ggiiig.part.domain.CarPart;
+import com.ggiiig.webhook.dto.response.ResultDto;
 
 import java.text.DecimalFormat;
 
@@ -30,13 +31,31 @@ public class CarRepairCostCalculator {
     private static final String NEW_LINE = "\n";
     private static final String HTML_NEW_LINE = "<br>";
 
-    public static String calculate(ResponseDto responseDto, CarPart carPart) {
+    public static ResultDto calculateForAsync(ResponseDto responseDto, CarPart carPart) {
+        if (responseDto == null || carPart == null) {
+            throw new IllegalArgumentException("responseDto 또는 carPart 는 null 이 될 수 없습니다.");
+        }
+
+        return generateData(responseDto, carPart);
+    }
+
+    public static String calculateForSync(ResponseDto responseDto, CarPart carPart) {
         if (responseDto == null || carPart == null) {
             throw new IllegalArgumentException("responseDto 또는 carPart 는 null 이 될 수 없습니다.");
         }
 
         String rawMessage = generateMessage(responseDto, carPart);
         return convertNewLineToBrTags(rawMessage);
+    }
+
+    private static ResultDto generateData(ResponseDto responseDto, CarPart carPart) {
+        return new ResultDto(
+                carPart.getDisplayName(),
+                1,
+                generateMessage(responseDto, carPart),
+                "중간 정도",
+                "1~3일"
+        );
     }
 
     private static String generateMessage(ResponseDto responseDto, CarPart carPart) {

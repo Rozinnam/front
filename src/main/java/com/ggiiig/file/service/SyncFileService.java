@@ -39,7 +39,7 @@ public class SyncFileService implements FileService {
             log.info("fileName : {}\n", file.getOriginalFilename());
         }
 
-        return CarRepairCostCalculator.calculate(syncFileAdaptor.communicateWithAiServer(files), carPart);
+        return CarRepairCostCalculator.calculateForSync(syncFileAdaptor.communicateWithAiServer(files), carPart);
     }
 
 }

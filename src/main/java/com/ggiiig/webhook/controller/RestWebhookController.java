@@ -4,6 +4,7 @@ import com.ggiiig.file.dto.response.ResponseDto;
 import com.ggiiig.util.CarRepairCostCalculator;
 import com.ggiiig.sse.SseRestController;
 import com.ggiiig.util.TaskCarPartRegistry;
+import com.ggiiig.webhook.dto.response.ResultDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,7 +32,7 @@ public class RestWebhookController {
             return ResponseEntity.badRequest().body("TaskId가 유효하지 않습니다.");
         }
 
-        String result = CarRepairCostCalculator.calculate(responseDto, taskCarPartRegistry.getCarPart(taskId));
+        ResultDto result = CarRepairCostCalculator.calculateForAsync(responseDto, taskCarPartRegistry.getCarPart(taskId));
 
         sseRestController.sendResult(taskId, result);
         log.info("결과 전송 완료: \n{}", taskId + result);

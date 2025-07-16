@@ -1,5 +1,7 @@
 package com.ggiiig.sse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ggiiig.webhook.dto.response.ResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/sse")
 @RequiredArgsConstructor
 public class SseRestController {
-
+    private final ObjectMapper objectMapper;
     // 연결 관리용 맵
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
@@ -34,11 +36,11 @@ public class SseRestController {
         return emitter;
     }
 
-    public void sendResult(String taskId, String result) {
+    public void sendResult(String taskId, ResultDto result) {
         SseEmitter emitter = emitters.get(taskId);
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().data(result));
+                emitter.send(SseEmitter.event().data(objectMapper.writeValueAsString(result)));
                 emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);
