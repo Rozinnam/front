@@ -1,78 +1,23 @@
-<header class="app-header" th:fragment="HeaderFragment">
-    <div class="header-container">
-        <a href="/" class="header-logo">
-            <img src="/images/logo.png" alt="자동차 수리비 견적" class="logo-image">
-        </a>
+<div class="flex justify-center items-center h-24" th:fragment="HeaderFragment">
+    <nav class="w-full">
+        <div class="container mx-auto flex items-center justify-between h-24 relative">
+            <!-- 왼쪽: 로고 + 설명 (세로 배치) -->
+            <div class="flex flex-col items-center absolute left-1/2 transform -translate-x-1/2">
+                <a href="/" class="flex justify-center">
+                    <img src="/images/logo.png" alt="끼이익 - 수리비 예측" class="h-10 mb-1">
+                </a>
+                <div class="text-sm font-semibold text-black">
+                    사진으로 알아보는 차량 수리 견적, 끼이익
+                </div>
+            </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="header-nav hidden-mobile">
-            <a href="/" class="nav-item">홈</a>
-            <a href="/request" class="nav-item">견적받기</a>
-        </nav>
-    </div>
-</header>
+            <!-- 왼쪽 빈 공간 (로고 빠졌으므로 여백만 유지) -->
+            <div class="ml-4 w-10"></div>
 
-<style>
-    .app-header {
-        background-color: var(--bg-primary, #ffffff);
-        border-bottom: 1px solid var(--border-light, #f3f4f6);
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        backdrop-filter: blur(8px);
-        background-color: rgba(255, 255, 255, 0.95);
-    }
-
-    .header-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .header-logo {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-    }
-
-    .logo-image {
-        height: 32px;
-        width: auto;
-    }
-
-    .header-nav {
-        display: flex;
-        gap: 1.5rem;
-    }
-
-    .nav-item {
-        color: var(--text-secondary, #6b7280);
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.875rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: all 0.2s ease;
-    }
-
-    .nav-item:hover,
-    .nav-item.active {
-        color: var(--accent, #2563eb);
-        background-color: var(--bg-tertiary, #f3f4f6);
-    }
-
-    @media (max-width: 768px) {
-        .header-container {
-            padding: 0 1rem;
-            justify-content: center;
-        }
-
-        .hidden-mobile {
-            display: none;
-        }
-    }
-</style>
+            <!-- 오른쪽: 필요 시 추가 요소, 없으면 빈 div -->
+            <div class="mr-4">
+                <!-- 빈 공간 또는 오른쪽 요소 -->
+            </div>
+        </div>
+    </nav>
+</div>
