@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>자동차 수리비 견적 - AI 기반 즉시 견적</title>
@@ -114,6 +113,9 @@
         }
     </style>
 </head>
+
+<header th:replace="common/fragment/header/header :: HeaderFragment"></header>
+
 <body>
 <!-- Main Content -->
 <main class="main-content">
