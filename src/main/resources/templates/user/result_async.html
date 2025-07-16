@@ -3,7 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layout/layout}"
       layout:fragment="content">
-
+<head>
+    <script th:inline="javascript">
+        const taskId = [[${taskId}]];
+    </script>
+</head>
 <body>
     <!-- Header -->
     <div class="header">
@@ -86,6 +90,7 @@
     </div>
 
     <!-- Bottom Navigation -->
+    <!--
     <nav class="bottom-nav">
         <a href="/" class="bottom-nav-item">
             <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
@@ -112,6 +117,7 @@
             <span class="bottom-nav-label">내역</span>
         </a>
     </nav>
+    -->
 
     <style>
         .loading-card {
@@ -242,27 +248,41 @@
 
     <script>
         // Simulate loading progress
-        let progress = 0;
+        const resultBox = document.querySelector('#resultContainer > div');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
         const loadingState = document.getElementById('loadingState');
         const resultContainer = document.getElementById('resultContainer');
 
+        let progress = 0;
         const progressInterval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress > 100) progress = 100;
-
+            progress = Math.min(progress + Math.random() * 5, 95);
             progressFill.style.width = progress + '%';
             progressText.textContent = Math.round(progress) + '%';
+        }, 300);
 
-            if (progress >= 100) {
+        if (taskId) {
+            const eventSource = new EventSource(`/sse/result/${taskId}`);
+
+            eventSource.onmessage = function (event) {
                 clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+                progressText.textContent = '100%';
+
                 setTimeout(() => {
                     loadingState.style.display = 'none';
                     resultContainer.style.display = 'block';
+                    resultBox.innerHTML = event.data;
                 }, 500);
-            }
-        }, 200);
+
+                eventSource.close();
+            };
+
+            eventSource.onerror = function () {
+                console.error("SSE 연결 실패");
+                eventSource.close();
+            };
+        }
 
         // Sort functionality
         document.querySelectorAll('.sort-option').forEach(button => {
