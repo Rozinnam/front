@@ -1,7 +1,6 @@
 package com.ggiiig.global;
 
 import com.ggiiig.config.FileProperties;
-import com.example.front.file.exception.*;
 import com.ggiiig.file.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
