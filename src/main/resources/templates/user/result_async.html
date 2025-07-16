@@ -40,7 +40,7 @@
 
         <!-- Result Container (hidden initially) -->
         <div id="resultContainer" style="display: none;">
-            <div th:utext="${result}"></div>
+            <div id="resultHtmlContainer" th:utext="${result}"></div>
 
             <!-- Service Centers -->
             <div class="service-centers-section">
@@ -248,7 +248,7 @@
 
     <script>
         // Simulate loading progress
-        const resultBox = document.querySelector('#resultContainer > div');
+        const resultBox = document.getElementById('resultHtmlContainer');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
         const loadingState = document.getElementById('loadingState');
@@ -280,6 +280,9 @@
 
             eventSource.onerror = function () {
                 console.error("SSE 연결 실패");
+                clearInterval(progressInterval);   // 타이머 해제
+                progressFill.style.width = '100%'; // 실패 UI 처리 필요시
+                progressText.textContent = 'Error';
                 eventSource.close();
             };
         }

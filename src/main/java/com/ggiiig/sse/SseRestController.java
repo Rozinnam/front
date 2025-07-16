@@ -41,6 +41,8 @@ public class SseRestController {
                 emitter.send(SseEmitter.event().data(result));
                 emitter.complete();
             } catch (IOException e) {
+                emitter.completeWithError(e);
+            } finally {
                 emitters.remove(taskId);
             }
         }
