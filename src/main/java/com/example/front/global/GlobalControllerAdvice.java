@@ -25,7 +25,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "지원되지 않는 파일 형식입니다.\n지원 파일 형식: "
                 + String.join(", ", fileProperties.getSupportedTypes()));
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -33,7 +33,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage",
                 "각 파일은 최대 " + fileProperties.getMaxSize() + "까지 업로드 가능합니다.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -45,7 +45,7 @@ public class GlobalControllerAdvice {
             redirectAttributes.addFlashAttribute("errorMessage", "파일 업로드 중 알 수 없는 오류가 발생했습니다.");
         }
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(FileEmptyException.class)
@@ -53,14 +53,14 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "업로드할 파일을 선택해 주세요.\n" +
                 "파일 선택 버튼을 클릭하여 파일을 추가하실 수 있습니다.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(CarPartEmptyException.class)
     public String handleCarPartEmptyException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", "파손된 부품을 선택해 주세요.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(UnExpectedStateException.class)
@@ -69,7 +69,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(CarPartNotFoundForTaskIdException.class)
@@ -78,7 +78,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(AiServerCommunicationException.class)
@@ -87,7 +87,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -96,7 +96,7 @@ public class GlobalControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", "시스템 오류가 발생했습니다.\n" +
                 "잠시 후 다시 시도해주시거나 문제가 지속되면 관리자에게 문의해주세요.");
 
-        return "redirect:/request";
+        return "redirect:/";
     }
 
     //RestTemplate 관련 예외

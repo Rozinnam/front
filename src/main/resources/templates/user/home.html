@@ -5,25 +5,93 @@
       layout:fragment="content">
 
 <style>
-    body {
-        font-family: system-ui, sans-serif;
-        background-color: #ffffff;
-        color: #1a1a1a;
-        margin: 0;
-        padding: 16px;
+    .center-location {
+        text-align: center;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    /* 기존 input 숨기기 */
+    input[type="file"] {
+        display: none;
+    }
+
+    /* 사용자 지정 버튼 스타일 */
+    #customFileButton {
+        padding: 10px 20px;
+        border: none;
+        background-color: #000;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .margin-bottom {
+        margin-bottom: 30px;
+    }
+
+    .car-part-select {
+        width: 20vw;
+        min-width: 150px;
+        max-width: 300px;
+        display: block;       /* 명시적으로 block 설정 */
+        margin: 0 auto;        /* 🔥 수평 가운데 정렬 */
+    }
+
+    .preview-container {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .preview-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+    }
+
+    .remove-button {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #555;
+        border: none;
+        border-radius: 50%;
         font-size: 16px;
-        line-height: 1.7;
-    }
-
-    .container {
-        max-width: 720px;
-        margin: 0 auto;
-    }
-
-    h1 {
-        font-size: 20px;
-        margin-bottom: 24px;
         font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-row {
+        display: flex;
+        gap: 24px; /* 이미지 사이 간격 */
+        justify-content: center; /* 가운데 정렬 (선택) */
+        align-items: center; /* 위쪽 정렬 (필요시) */
+    }
+
+    .arrow {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: block;
+    }
+
+    figure {
+        margin: 0;
+        text-align: center;
     }
 
     h2 {
@@ -49,65 +117,142 @@
     strong {
         font-weight: 600;
     }
-
-    .email {
-        color: #0066cc;
-        font-weight: 500;
-    }
-    .centered-button-container {
-        display: flex;
-        justify-content: center; /* 가로로 중앙 정렬 */
-        align-items: flex-start;
-        height: 100vh; /* 화면의 전체 높이 */
-    }
-
-    /* 버튼 스타일 */
-    .btn-black {
-        background-color: black; /* 검정 배경 */
-        color: white; /* 흰색 글씨 */
-        padding: 15px 30px; /* 버튼 크기 */
-        font-size: 16px; /* 글씨 크기 */
-        border: none; /* 버튼 테두리 제거 */
-        border-radius: 5px; /* 버튼 모서리 둥글게 */
-    }
-
-    @media (max-width: 600px) {
-        input[type="file"] {
-            width: 80%;
-        }
-    }
 </style>
 
 <body>
-<div class="container">
-    <h1>📌 서비스 이용 안내 및 촬영 가이드</h1>
+<div class="center-location">
+    <div class="image-row margin-bottom">
+        <figure>
+            <img src="/images/before_accident.jpg" alt="수리 전" class="preview-image">
+        </figure>
+        <figure>
+            <img src="/images/arrow.jfif" alt="화살표" class = "arrow">
+        </figure>
+        <figure>
+            <img src="/images/after_accident.jpg" alt="수리 후" class="preview-image">
+        </figure>
+    </div>
 
-    <h2>📷 정확한 예측을 위한 사진 촬영 방법</h2>
-    <p>정확한 수리비 예측을 위해 아래의 촬영 방법을 따라 주세요.</p>
-    <ul>
-        <li>차량과 <strong>약 1m 거리</strong>에서 <strong>정면 방향</strong>으로 촬영해 주세요.</li>
-        <li><strong>밝은 장소</strong>에서 선명하게 찍어 주세요.</li>
-        <li><strong>한 번에 한 장</strong>, <strong>한 부위씩</strong> 업로드해 주세요.</li>
-    </ul>
+    <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
+        <div class="margin-bottom">
+            <!-- 숨겨진 파일 선택 input -->
+            <input type="file" name="files" multiple id="fileInput" accept="image/*">
 
-    <h2>⚠ 서비스 이용 시 유의사항</h2>
-    <p>본 서비스는 현재 <strong>프로토타입</strong> 단계로, AI 예측 결과는 참고용입니다. 실제 견적과 차이가 있을 수 있습니다.</p>
-    <p>차량 내부 손상 또는 정밀 진단이 필요한 경우, <strong>정비소 방문</strong>을 권장드립니다.</p>
-    <p>업로드된 사진은 <strong>모델 학습 및 품질 개선</strong>을 위해 저장될 수 있습니다. 개인정보는 수집되지 않습니다.</p>
-    <p>당사 웹사이트는 동일 사용자의 반복 방문으로 인한 통계 왜곡을 방지하기 위해, 일정 시간 동안 접속 정보를 <strong>임시적</strong>으로 보관합니다.
-        해당 정보는 <strong>개인을 식별할 수 없으며</strong>, <strong>30분</strong> 이내에 자동으로 <strong>삭제</strong>됩니다.</p>
+            <!-- 사용자 정의 파일 선택 버튼 -->
+            <button type="button" id="customFileButton" aria-label="파일 선택(이미지 업로드)" aria-controls="fileInput">사진 선택</button>
+        </div>
 
-    <h2>📮 피드백 및 문의</h2>
-    <p>더 나은 서비스를 위해 여러분의 의견을 소중히 반영하고자 합니다.</p>
-    <p>이용 중 불편하거나 개선하고 싶은 점이 있으시다면 아래 이메일로 자유롭게 알려주세요.</p>
-    <p class="email">📩 pairyongjun@gmail.com</p>
+        <div class="margin-bottom">
+            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
+                <option value="" class="margin-bottom" disabled selected hidden>파손된 부품을 선택하세요</option>
+                <th:block th:each="part : ${carParts}">
+                    <option th:value="${part.name()}" th:text="${part.displayName}"></option>
+                </th:block>
+            </select>
+        </div>
 
-    <p>이용해 주셔서 감사합니다.</p>
+        <!-- 이미지 미리보기 -->
+        <div id="imagePreviewContainer"></div>
+
+        <div class="center-location">
+            <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
+        </div>
+
+        <div class="margin-bottom">
+            <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
+        </div>
+    </form>
 </div>
 
-<div class="centered-button-container">
-    <a href="/request" class="btn btn-black">시작하기</a>
-</div>
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const customFileButton = document.getElementById("customFileButton");
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+    const errorText = document.getElementById("errorText");
+    const uploadForm = document.getElementById("uploadForm");
+
+    let selectedFiles = [];
+
+    customFileButton.addEventListener("click", function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function (event) {
+        const files = Array.from(event.target.files);
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const MAX_FILE_COUNT = 10;
+        const MAX_FILE_SIZE = 1 * 1024 * 1024;
+        const MB = 1024 * 1024;
+        errorText.textContent = "";
+
+        if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
+            errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
+            event.target.value = "";
+            return;
+        }
+
+        files.forEach(file => {
+            if (!allowedMimeTypes.includes(file.type)) {
+                errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                errorText.textContent = "각 파일은 최대 " + (MAX_FILE_SIZE / MB) + "MB까지 업로드 가능합니다.";
+                return;
+            }
+
+            if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                selectedFiles.push(file);
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const previewContainer = document.createElement("div");
+                    previewContainer.classList.add("preview-container");
+
+                    const imgElement = document.createElement("img");
+                    imgElement.src = e.target.result;
+                    imgElement.classList.add("preview-image");
+                    imgElement.alt = file.name;
+
+                    const removeButton = document.createElement("button");
+                    removeButton.type = "button";
+                    removeButton.innerHTML = "&#10006;"; // X 아이콘
+                    removeButton.classList.add("remove-button");
+
+                    removeButton.addEventListener("click", function () {
+                        removeFile(file, previewContainer);
+                    });
+
+                    previewContainer.appendChild(imgElement);
+                    previewContainer.appendChild(removeButton);
+                    imagePreviewContainer.appendChild(previewContainer);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        updateFileInput();
+    });
+
+    uploadForm.addEventListener("submit", function (e) {
+        if (fileInput.files.length === 0) {
+            errorText.textContent = "파일을 선택해 주세요.";
+            e.preventDefault();
+        }
+    })
+
+    function removeFile(file, previewContainer) {
+        selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size);
+        previewContainer.remove();
+        updateFileInput();
+    }
+
+    function updateFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
+    }
+</script>
 </body>
-
 </html>
