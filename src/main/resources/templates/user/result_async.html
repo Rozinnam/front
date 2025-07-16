@@ -39,7 +39,7 @@
         </div>
 
         <!-- Result Container (hidden initially) -->
-        <div id="resultHtmlContainer" style="display: none;">
+        <div id="resultContainer" style="display: none;">
             <div class="result-card">
                 <h2 class="result-title" id="resultPartName">[부위명] 분석 결과</h2>
 
@@ -305,7 +305,6 @@
 
                 setTimeout(() => {
                     loadingState.style.display = 'none';
-                    document.getElementById('resultHtmlContainer').style.display = 'block';
                     resultContainer.style.display = 'block'; // service center 등 포함 영역
                 }, 500);
 
