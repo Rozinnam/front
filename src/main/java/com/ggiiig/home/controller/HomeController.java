@@ -43,6 +43,14 @@ public class HomeController {
         return "user/home";
     }
 
+    @GetMapping("/request")
+    public String getRequestPage(HttpServletRequest request, Model model) {
+        model.addAttribute("carParts", CarPart.values());
+        pageViewCountService.handleViewCount(getClientIP(request), PageType.REQUEST);
+
+        return "user/request";
+    }
+
     @CalculateTime
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files,
