@@ -21,7 +21,7 @@ public class SseRestController {
     // 연결 관리용 맵
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    @GetMapping("/subscribe/{taskId}")
+    @GetMapping("/sse/result/{taskId}")
     public SseEmitter subscribe(@PathVariable String taskId) {
         SseEmitter emitter = new SseEmitter(60 * 10000L);
 
