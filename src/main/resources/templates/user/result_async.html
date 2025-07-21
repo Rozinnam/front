@@ -4,103 +4,334 @@
       layout:decorate="~{common/layout/layout}"
       layout:fragment="content">
 <head>
-    <meta charset="UTF-8">
     <script th:inline="javascript">
         const taskId = [[${taskId}]];
     </script>
-    <style>
-        /* 스피너 및 결과 스타일 */
-        .spinner {
-            width: 80px;
-            height: 80px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .spinner div {
-            box-sizing: border-box;
-            display: block;
-            position: absolute;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border: 8px solid #333;
-            border-radius: 50%;
-            animation: spin 1.2s linear infinite;
-            border-color: #333 transparent transparent transparent;
-        }
-
-        .spinner div:nth-child(1) {
-            animation-delay: -0.45s;
-        }
-
-        .spinner div:nth-child(2) {
-            animation-delay: -0.3s;
-        }
-
-        .spinner div:nth-child(3) {
-            animation-delay: -0.15s;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #result-container {
-            text-align: center;
-            display: none;
-            margin-top: 50px;
-        }
-
-        #result-text {
-            font-weight: bold;
-            font-size: 4em;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-<!-- 스피너 -->
-<div class="spinner" id="loading-spinner">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+<!-- Header -->
+<div class="header">
+    <div class="header-content">
+        <button class="header-back" onclick="history.back()">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <h1 class="header-title">견적 결과</h1>
+        <div style="width: 40px;"></div>
+    </div>
 </div>
 
-<!-- 결과 -->
-<div id="result-container">
-    <p id="result-text"></p>
+<div class="container">
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-card">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 class="loading-title">AI 분석 중...</h3>
+            <p class="loading-desc">업로드된 이미지를 분석하고 있습니다</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Container -->
+    <div id="resultContainer" style="display: none;">
+        <div class="result-card">
+            <h2 class="result-title" id="resultPartName">[부위명] 분석 결과</h2>
+
+            <div class="result-info">
+                <div class="result-item">
+                    <span class="result-label">분석 이미지</span>
+                    <span class="result-value" id="resultImageCount">[N]장</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">예상 수리비</span>
+                    <span class="result-value result-estimate" id="resultEstimate">[예상 수리비]</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">손상 정도</span>
+                    <span class="result-value" id="resultDamageLevel">[손상 정도]</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">예상 수리 기간</span>
+                    <span class="result-value" id="resultRepairTime">[수리 기간]</span>
+                </div>
+            </div>
+
+            <div class="result-note">
+                위 견적은 AI 분석을 통한 예상 금액입니다. 정확한 견적은 아래 추천 카센터에 문의하시기 바랍니다.
+            </div>
+        </div>
+
+        <!-- Service Centers -->
+        <div class="service-centers-section">
+            <div class="section-header">
+                <h3>추천 카센터</h3>
+                <div class="sort-toggle">
+                    <button class="sort-option active" data-sort="rating">평점순</button>
+                    <button class="sort-option" data-sort="distance">거리순</button>
+                </div>
+            </div>
+
+            <div class="service-centers-list">
+                <div th:each="center : ${serviceCenters}" class="service-center-card"
+                     th:attr="data-id=${center.id}">
+                    <div class="service-center-header">
+                        <div>
+                            <h4 class="service-center-name" th:text="${center.name}"></h4>
+                            <div class="service-center-rating">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <span th:text="${center.rating}"></span>
+                            </div>
+                        </div>
+                        <div class="service-center-actions">
+                            <button class="btn-icon"
+                                    th:attr="data-phone=${center.phoneNumber}">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="service-center-info">
+                        <p class="service-center-amount" th:text="${center.amount}"></p>
+                        <p class="service-center-address" th:text="${center.address}"></p>
+                        <p class="service-center-hours" th:text="${center.operatingHours}"></p>
+                        <p class="service-center-description" th:text="${center.description}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/request" class="btn btn-outline btn-full">새 견적 요청</a>
+            <button class="btn btn-primary btn-full mt-md" onclick="shareResult()">결과 공유</button>
+        </div>
+    </div>
 </div>
+
+<style>
+    .loading-card {
+        background-color: var(--bg-primary);
+        border-radius: var(--radius-lg);
+        padding: var(--space-2xl);
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        margin: var(--space-xl) 0;
+    }
+
+    .loading-content {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--bg-tertiary);
+        border-top: 4px solid var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto var(--space-lg) auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 var(--space-sm) 0;
+        color: var(--text-primary);
+    }
+
+    .loading-desc {
+        color: var(--text-secondary);
+        margin: 0 0 var(--space-lg) 0;
+        font-size: 0.875rem;
+    }
+
+    .loading-progress {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+
+    .progress-bar {
+        flex: 1;
+        height: 8px;
+        background-color: var(--bg-tertiary);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+        transition: width 0.3s ease;
+        width: 0%;
+    }
+
+    .progress-text {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        min-width: 40px;
+    }
+
+    .service-centers-section {
+        margin-top: var(--space-xl);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-lg);
+    }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .service-centers-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .service-center-description {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: var(--space-sm);
+        line-height: 1.4;
+    }
+
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-md);
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+        background-color: var(--accent-light);
+        transform: scale(1.05);
+    }
+
+    .action-buttons {
+        margin-top: var(--space-xl);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--border-light);
+    }
+</style>
 
 <script>
-    const eventSource = new EventSource(`/sse/subscribe/${taskId}`);
+    // Simulate loading progress
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const loadingState = document.getElementById('loadingState');
+    const resultContainer = document.getElementById('resultContainer');
 
-    eventSource.onmessage = function (event) {
-        const result = event.data;
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress = Math.min(progress + Math.random() * 5, 95);
+        progressFill.style.width = progress + '%';
+        progressText.textContent = Math.round(progress) + '%';
+    }, 300);
 
-        document.getElementById('loading-spinner').style.display = 'none';
-        document.getElementById('result-container').style.display = 'block';
-        document.getElementById('result-text').innerHTML = result;
+    if (taskId) {
+        const eventSource = new EventSource(`/sse/result/${taskId}`);
 
-        eventSource.close();
-    };
+        eventSource.onmessage = function (event) {
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
+            progressText.textContent = '100%';
 
-    eventSource.onerror = function () {
-        document.getElementById('loading-spinner').style.display = 'none';
-        document.getElementById('result-container').style.display = 'block';
-        document.getElementById('result-text').textContent = '서버 연결 오류가 발생했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
-        eventSource.close();
-    };
+            const data = JSON.parse(event.data);
+
+            document.getElementById('resultPartName').textContent = `${data.carPartName} 분석 결과`;
+            document.getElementById('resultImageCount').textContent = `${data.imageCount}장`;
+            document.getElementById('resultEstimate').textContent = data.estimate;
+            document.getElementById('resultDamageLevel').textContent = data.damageLevel;
+            document.getElementById('resultRepairTime').textContent = data.repairTime;
+
+            setTimeout(() => {
+                loadingState.style.display = 'none';
+                resultContainer.style.display = 'block';
+            }, 500);
+
+            eventSource.close();
+        };
+
+        eventSource.onerror = function () {
+            console.error("SSE 연결 실패");
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Error';
+            eventSource.close();
+        };
+    }
+
+    // Sort buttons
+    document.querySelectorAll('.sort-option').forEach(button => {
+        button.addEventListener('click', function () {
+            document.querySelectorAll('.sort-option').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Handle card click via JS (no th:onclick!)
+    document.querySelectorAll('.service-center-card').forEach(card => {
+        card.addEventListener('click', function () {
+            const id = card.dataset.id;
+            window.location.href = `/center/${id}`;
+        });
+    });
+
+    document.querySelectorAll('.btn-icon').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation(); // 카드 클릭 막기
+            const phone = button.dataset.phone;
+            window.open(`tel:${phone}`);
+        });
+    });
+
+    function shareResult() {
+        if (navigator.share) {
+            navigator.share({
+                title: '자동차 수리비 견적 결과',
+                text: '견적 결과를 확인해보세요!',
+                url: window.location.href
+            });
+        } else {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('링크가 클립보드에 복사되었습니다!');
+            });
+        }
+    }
 </script>
-
 </body>
 </html>
