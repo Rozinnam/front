@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <!-- Result Container (hidden initially) -->
+    <!-- Result Container -->
     <div id="resultContainer" style="display: none;">
         <div class="result-card">
             <h2 class="result-title" id="resultPartName">[부위명] 분석 결과</h2>
@@ -79,7 +79,7 @@
 
             <div class="service-centers-list">
                 <div th:each="center : ${serviceCenters}" class="service-center-card"
-                     th:onclick="'location.href=\'/center/\' + ${center.id}'">
+                     th:attr="data-id=${center.id}">
                     <div class="service-center-header">
                         <div>
                             <h4 class="service-center-name" th:text="${center.name}"></h4>
@@ -92,7 +92,7 @@
                         </div>
                         <div class="service-center-actions">
                             <button class="btn-icon"
-                                    th:onclick="'event.stopPropagation(); window.open(\'tel:\' + \'' + ${center.phoneNumber} + '\')'">
+                                    th:attr="data-phone=${center.phoneNumber}">
                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                                 </svg>
@@ -115,36 +115,6 @@
         </div>
     </div>
 </div>
-
-<!-- Bottom Navigation -->
-<!--
-<nav class="bottom-nav">
-    <a href="/" class="bottom-nav-item">
-        <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
-        <span class="bottom-nav-label">홈</span>
-    </a>
-    <a href="/request" class="bottom-nav-item">
-        <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        <span class="bottom-nav-label">견적</span>
-    </a>
-    <a href="#" class="bottom-nav-item active">
-        <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        <span class="bottom-nav-label">센터</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-        <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-        <span class="bottom-nav-label">내역</span>
-    </a>
-</nav>
--->
 
 <style>
     .loading-card {
@@ -301,7 +271,6 @@
 
             const data = JSON.parse(event.data);
 
-            // 데이터 삽입
             document.getElementById('resultPartName').textContent = `${data.carPartName} 분석 결과`;
             document.getElementById('resultImageCount').textContent = `${data.imageCount}장`;
             document.getElementById('resultEstimate').textContent = data.estimate;
@@ -310,7 +279,7 @@
 
             setTimeout(() => {
                 loadingState.style.display = 'none';
-                resultContainer.style.display = 'block'; // service center 등 포함 영역
+                resultContainer.style.display = 'block';
             }, 500);
 
             eventSource.close();
@@ -318,18 +287,34 @@
 
         eventSource.onerror = function () {
             console.error("SSE 연결 실패");
-            clearInterval(progressInterval);   // 타이머 해제
-            progressFill.style.width = '100%'; // 실패 UI 처리 필요시
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
             progressText.textContent = 'Error';
             eventSource.close();
         };
     }
 
-    // Sort functionality
+    // Sort buttons
     document.querySelectorAll('.sort-option').forEach(button => {
         button.addEventListener('click', function () {
             document.querySelectorAll('.sort-option').forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
+        });
+    });
+
+    // Handle card click via JS (no th:onclick!)
+    document.querySelectorAll('.service-center-card').forEach(card => {
+        card.addEventListener('click', function () {
+            const id = card.dataset.id;
+            window.location.href = `/center/${id}`;
+        });
+    });
+
+    document.querySelectorAll('.btn-icon').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation(); // 카드 클릭 막기
+            const phone = button.dataset.phone;
+            window.open(`tel:${phone}`);
         });
     });
 
