@@ -1,9 +1,9 @@
 package com.ggiiig.center.service;
 
-import com.example.front.center.dto.ServiceCenterDto;
-import com.example.front.center.entity.Review;
-import com.example.front.center.entity.ServiceCenter;
-import com.example.front.center.repository.ServiceCenterRepository;
+import com.ggiiig.center.dto.ServiceCenterDto;
+import com.ggiiig.center.entity.Review;
+import com.ggiiig.center.entity.ServiceCenter;
+import com.ggiiig.center.repository.ServiceCenterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

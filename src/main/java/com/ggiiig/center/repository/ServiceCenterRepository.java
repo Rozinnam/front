@@ -1,6 +1,6 @@
 package com.ggiiig.center.repository;
 
-import com.example.front.center.entity.ServiceCenter;
+import com.ggiiig.center.entity.ServiceCenter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

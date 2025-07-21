@@ -1,7 +1,7 @@
 package com.ggiiig.center.controller;
 
-import com.example.front.center.dto.ServiceCenterDto;
-import com.example.front.center.service.ServiceCenterService;
+import com.ggiiig.center.dto.ServiceCenterDto;
+import com.ggiiig.center.service.ServiceCenterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
