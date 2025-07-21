@@ -1,6 +1,7 @@
 package com.ggiiig.home.controller;
 
 import com.ggiiig.annotation.CalculateTime;
+import com.ggiiig.center.service.ServiceCenterService;
 import com.ggiiig.file.service.FileService;
 import com.ggiiig.pageview.entity.PageType;
 import com.ggiiig.pageview.service.PageViewCountService;
@@ -27,6 +28,7 @@ public class HomeController {
 
     private final FileService fileService;
     private final PageViewCountService pageViewCountService;
+    private final ServiceCenterService serviceCenterService;
 
 //    @GetMapping("/")
 //    public String home(HttpServletRequest request) {
@@ -59,6 +61,8 @@ public class HomeController {
                          Model model) {
         String result = fileService.communicateWithAiServer(files, carPart);
         pageViewCountService.handleViewCount(getClientIP(request), PageType.RESULT);
+
+        model.addAttribute("serviceCenters", serviceCenterService.getTopServiceCentersByRating());
 
         if (isSyncMode()) {
             model.addAttribute("result", result);
