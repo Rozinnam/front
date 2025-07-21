@@ -60,23 +60,26 @@ public class CarRepairCostCalculator {
 
     private static String generateMessage(ResponseDto responseDto, CarPart carPart) {
         if (isReplacementRecommended(responseDto, carPart)) {
-            return "교체 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(carPart.getReplacementCost()) + "원";
+            return "교체 추천" + NEW_LINE + "비용 : " + new PriceRange(carPart.getReplacementCost()).printRange() + "원";
         }
 
         int repairCost = roundToUnit(calculateRepairCost(responseDto, carPart));
         int replacementCost = carPart.getReplacementCost();
         double percent = calculateRepairPercent(repairCost, replacementCost);
 
+        PriceRange repairCostRange = getPriceRange(repairCost);
+        PriceRange replacementCostRange = getPriceRange(replacementCost);
+
         // 수리 비용이 교체 비용보다 크면 교체 추천
         if (repairCost > replacementCost) {
-            return "교체 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(replacementCost) + "원";
+            return "교체 추천" + NEW_LINE + "비용 : " + replacementCostRange.printRange() + "원";
             // 수리 비용이 교체 비용의 45~55% 범위이면 두 옵션 모두 제시
         } else if (percent >= 45 && percent < 55) {
-            return "교체 비용 : " + addThousandsSeparator(replacementCost) + NEW_LINE + "판금 및 도색 비용 : "
-                    + addThousandsSeparator(repairCost) + "원";
+            return "교체 비용 : " + replacementCostRange.printRange() + NEW_LINE + "판금 및 도색 비용 : "
+                    + repairCostRange.printRange() + "원";
             // 그 외의 경우 수리 추천
         } else {
-            return "판금 및 도색 추천" + NEW_LINE + "비용 : " + addThousandsSeparator(repairCost) + "원";
+            return "판금 및 도색 추천" + NEW_LINE + "비용 : " + repairCostRange.printRange() + "원";
         }
     }
 
@@ -169,7 +172,7 @@ public class CarRepairCostCalculator {
         return escaped.replace(NEW_LINE, HTML_NEW_LINE);
     }
 
-    private static String addThousandsSeparator(int amount) {
-        return new DecimalFormat("#,###").format(amount);
+    private static PriceRange getPriceRange(int amount) {
+        return new PriceRange(amount);
     }
 }

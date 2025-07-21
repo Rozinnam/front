@@ -421,6 +421,10 @@ p {
     line-height: 1.5;
 }
 
+.service-center-amount {
+    margin-bottom: var(--space-sm);
+}
+
 .service-center-address {
     margin-bottom: var(--space-sm);
 }
