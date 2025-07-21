@@ -17,4 +17,5 @@ public class ServiceCenterDto {
     private Double rating;
     private String description;
     private String operatingHours;
+    private String amount;
 }
