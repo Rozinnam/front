@@ -4,255 +4,196 @@
       layout:decorate="~{common/layout/layout}"
       layout:fragment="content">
 
-<style>
-    .center-location {
-        text-align: center;
-        padding: 20px;
-        margin-top: 30px;
-    }
-
-    /* 기존 input 숨기기 */
-    input[type="file"] {
-        display: none;
-    }
-
-    /* 사용자 지정 버튼 스타일 */
-    #customFileButton {
-        padding: 10px 20px;
-        border: none;
-        background-color: #000;
-        color: #fff;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .margin-bottom {
-        margin-bottom: 30px;
-    }
-
-    .car-part-select {
-        width: 20vw;
-        min-width: 150px;
-        max-width: 300px;
-        display: block;       /* 명시적으로 block 설정 */
-        margin: 0 auto;        /* 🔥 수평 가운데 정렬 */
-    }
-
-    .preview-container {
-        position: relative;
-        display: inline-block;
-        margin: 10px;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .preview-image {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 10px;
-        display: block;
-    }
-
-    .remove-button {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 24px;
-        height: 24px;
-        background-color: rgba(255, 255, 255, 0.8);
-        color: #555;
-        border: none;
-        border-radius: 50%;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .image-row {
-        display: flex;
-        gap: 24px; /* 이미지 사이 간격 */
-        justify-content: center; /* 가운데 정렬 (선택) */
-        align-items: center; /* 위쪽 정렬 (필요시) */
-    }
-
-    .arrow {
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        display: block;
-    }
-
-    figure {
-        margin: 0;
-        text-align: center;
-    }
-
-    h2 {
-        font-size: 17px;
-        margin-top: 24px;
-        margin-bottom: 12px;
-        font-weight: bold;
-    }
-
-    p {
-        margin-bottom: 12px;
-    }
-
-    ul {
-        padding-left: 20px;
-        margin-bottom: 12px;
-    }
-
-    li {
-        margin-bottom: 8px;
-    }
-
-    strong {
-        font-weight: 600;
-    }
-</style>
+<head>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" rel="stylesheet">
+</head>
 
 <body>
-<div class="center-location">
-    <div class="image-row margin-bottom">
-        <figure>
-            <img src="/images/before_accident.jpg" alt="수리 전" class="preview-image">
-        </figure>
-        <figure>
-            <img src="/images/arrow.jfif" alt="화살표" class = "arrow">
-        </figure>
-        <figure>
-            <img src="/images/after_accident.jpg" alt="수리 후" class="preview-image">
-        </figure>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="text-center mb-xl">
+            <h1 class="mb-lg">자동차 수리비 견적</h1>
+            <p class="text-lg mb-xl">사진 업로드로 즉시 견적을 확인하세요</p>
+            <a href="/request" class="btn btn-primary btn-large btn-full">
+                견적받기 시작
+            </a>
+        </div>
+
+        <!-- Guide Cards -->
+        <div class="space-y-lg">
+            <!-- 촬영 가이드 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-sm">촬영 가이드</h3>
+                </div>
+                <div class="card-body">
+                    <div class="space-y-md">
+                        <div class="guide-item">
+                            <div class="guide-number">1</div>
+                            <div>
+                                <h4 class="guide-title">적절한 거리 유지</h4>
+                                <p class="guide-desc">차량과 약 1m 거리에서 촬영</p>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <div class="guide-number">2</div>
+                            <div>
+                                <h4 class="guide-title">밝은 환경에서 촬영</h4>
+                                <p class="guide-desc">자연광이나 충분한 조명 활용</p>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <div class="guide-number">3</div>
+                            <div>
+                                <h4 class="guide-title">한 부위씩 촬영</h4>
+                                <p class="guide-desc">손상 부위를 정면에서 선명하게</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 서비스 안내 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-sm">서비스 안내</h3>
+                </div>
+                <div class="card-body">
+                    <div class="space-y-sm">
+                        <div class="notice-item notice-warning">
+                            <h4 class="notice-title">프로토타입 서비스</h4>
+                            <p class="notice-desc">AI 예측 결과는 참고용입니다. 실제 견적과 차이가 있을 수 있습니다.</p>
+                        </div>
+
+                        <div class="notice-item notice-info">
+                            <h4 class="notice-title">정밀 진단 권장</h4>
+                            <p class="notice-desc">차량 내부 손상이나 정밀 진단이 필요한 경우 정비소 방문을 권장합니다.</p>
+                        </div>
+
+                        <div class="notice-item notice-secondary">
+                            <h4 class="notice-title">개인정보 보호</h4>
+                            <p class="notice-desc">업로드된 사진은 모델 개선 목적으로만 사용되며, 개인정보는 수집하지 않습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 피드백 -->
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-md">서비스 개선에 참여</h3>
+                    <p class="text-sm text-muted mb-lg">더 나은 서비스를 위해 여러분의 의견을 기다립니다.</p>
+                    <a href="mailto:pairyongjun@gmail.com" class="btn btn-outline">
+                        피드백 보내기
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="text-center mt-xl pt-xl border-t">
+            <p class="text-sm text-muted mb-lg">지금 바로 시작해보세요</p>
+            <a href="/request" class="btn btn-accent btn-large btn-full">
+                견적받기
+            </a>
+        </div>
     </div>
 
-    <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
-        <div class="margin-bottom">
-            <!-- 숨겨진 파일 선택 input -->
-            <input type="file" name="files" multiple id="fileInput" accept="image/*">
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/" class="bottom-nav-item active">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="bottom-nav-label">홈</span>
+        </a>
+        <a href="/request" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            <span class="bottom-nav-label">견적</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span class="bottom-nav-label">센터</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <svg class="bottom-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span class="bottom-nav-label">내역</span>
+        </a>
+    </nav>
 
-            <!-- 사용자 정의 파일 선택 버튼 -->
-            <button type="button" id="customFileButton" aria-label="파일 선택(이미지 업로드)" aria-controls="fileInput">사진 선택</button>
-        </div>
+    <style>
+        .space-y-sm > * + * { margin-top: var(--space-sm); }
+        .space-y-md > * + * { margin-top: var(--space-md); }
+        .space-y-lg > * + * { margin-top: var(--space-lg); }
 
-        <div class="margin-bottom">
-            <select name="selectedCarPart" id="selectedCarPart" class="form-select car-part-select" required aria-required="true">
-                <option value="" class="margin-bottom" disabled selected hidden>파손된 부품을 선택하세요</option>
-                <th:block th:each="part : ${carParts}">
-                    <option th:value="${part.name()}" th:text="${part.displayName}"></option>
-                </th:block>
-            </select>
-        </div>
-
-        <!-- 이미지 미리보기 -->
-        <div id="imagePreviewContainer"></div>
-
-        <div class="center-location">
-            <p id="errorText" style="color: red;" th:text="${errorMessage}"></p>
-        </div>
-
-        <div class="margin-bottom">
-            <button type="submit" th:text="견적받기" class="btn btn-dark"></button>
-        </div>
-    </form>
-</div>
-
-<script>
-    const fileInput = document.getElementById("fileInput");
-    const customFileButton = document.getElementById("customFileButton");
-    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
-    const errorText = document.getElementById("errorText");
-    const uploadForm = document.getElementById("uploadForm");
-
-    let selectedFiles = [];
-
-    customFileButton.addEventListener("click", function () {
-        fileInput.click();
-    });
-
-    fileInput.addEventListener("change", function (event) {
-        const files = Array.from(event.target.files);
-        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const MAX_FILE_COUNT = 10;
-        const MAX_FILE_SIZE = 1 * 1024 * 1024;
-        const MB = 1024 * 1024;
-        errorText.textContent = "";
-
-        if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
-            errorText.textContent = "최대 " + MAX_FILE_COUNT + "개의 파일만 업로드할 수 있습니다.";
-            event.target.value = "";
-            return;
+        .guide-item {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
         }
 
-        files.forEach(file => {
-            if (!allowedMimeTypes.includes(file.type)) {
-                errorText.textContent = "이미지 파일만 업로드할 수 있습니다.";
-                return;
-            }
-
-            if (file.size > MAX_FILE_SIZE) {
-                errorText.textContent = "각 파일은 최대 " + (MAX_FILE_SIZE / MB) + "MB까지 업로드 가능합니다.";
-                return;
-            }
-
-            if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-                selectedFiles.push(file);
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const previewContainer = document.createElement("div");
-                    previewContainer.classList.add("preview-container");
-
-                    const imgElement = document.createElement("img");
-                    imgElement.src = e.target.result;
-                    imgElement.classList.add("preview-image");
-                    imgElement.alt = file.name;
-
-                    const removeButton = document.createElement("button");
-                    removeButton.type = "button";
-                    removeButton.innerHTML = "&#10006;"; // X 아이콘
-                    removeButton.classList.add("remove-button");
-
-                    removeButton.addEventListener("click", function () {
-                        removeFile(file, previewContainer);
-                    });
-
-                    previewContainer.appendChild(imgElement);
-                    previewContainer.appendChild(removeButton);
-                    imagePreviewContainer.appendChild(previewContainer);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        updateFileInput();
-    });
-
-    uploadForm.addEventListener("submit", function (e) {
-        if (fileInput.files.length === 0) {
-            errorText.textContent = "파일을 선택해 주세요.";
-            e.preventDefault();
+        .guide-number {
+            width: 2rem;
+            height: 2rem;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            flex-shrink: 0;
         }
-    })
 
-    function removeFile(file, previewContainer) {
-        selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size);
-        previewContainer.remove();
-        updateFileInput();
-    }
+        .guide-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--text-primary);
+        }
 
-    function updateFileInput() {
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => dataTransfer.items.add(file));
-        fileInput.files = dataTransfer.files;
-    }
-</script>
+        .guide-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .notice-item {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+
+        .notice-warning { background-color: rgba(217, 119, 6, 0.1); }
+        .notice-info { background-color: rgba(37, 99, 235, 0.1); }
+        .notice-secondary { background-color: rgba(107, 114, 128, 0.1); }
+
+        .notice-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--text-primary);
+        }
+
+        .notice-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .text-lg { font-size: 1.125rem; }
+        .border-t { border-top: 1px solid var(--border-light); }
+        .pt-xl { padding-top: var(--space-xl); }
+    </style>
 </body>
 </html>
