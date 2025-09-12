@@ -1,4 +1,4 @@
-package com.example.front.featureflag;
+package com.ggiiig.featureflag;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

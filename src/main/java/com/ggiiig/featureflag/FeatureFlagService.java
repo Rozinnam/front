@@ -1,4 +1,4 @@
-package com.example.front.featureflag;
+package com.ggiiig.featureflag;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
