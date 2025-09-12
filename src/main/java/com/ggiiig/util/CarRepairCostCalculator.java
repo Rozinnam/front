@@ -4,8 +4,6 @@ import com.ggiiig.file.dto.response.ResponseDto;
 import com.ggiiig.part.domain.CarPart;
 import com.ggiiig.webhook.dto.response.ResultDto;
 
-import java.text.DecimalFormat;
-
 import static org.springframework.web.util.HtmlUtils.htmlEscape;
 
 public class CarRepairCostCalculator {
