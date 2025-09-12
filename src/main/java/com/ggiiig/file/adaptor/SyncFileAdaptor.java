@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.List;
 
 @Component
-@ConditionalOnProperty(name = "app.mode", havingValue = "sync", matchIfMissing = true)
 @RequiredArgsConstructor
 public class SyncFileAdaptor {
     private final RestTemplate restTemplate;

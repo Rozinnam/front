@@ -21,7 +21,6 @@ import java.util.List;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequiredArgsConstructor
 public class AsyncFileAdaptor {
     private final RestTemplate restTemplate;

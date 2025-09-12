@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequestMapping("/sse")
 @RequiredArgsConstructor
 public class SseRestController {
