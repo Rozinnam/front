@@ -1,7 +1,7 @@
-package com.example.front.file.service;
+package com.ggiiig.file.service;
 
 import com.ggiiig.featureflag.FeatureFlagService;
-import com.example.front.part.domain.CarPart;
+import com.ggiiig.part.domain.CarPart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
