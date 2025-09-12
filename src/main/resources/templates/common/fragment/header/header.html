@@ -1,10 +1,11 @@
-<div class="flex justify-center items-center h-24" th:fragment="HeaderFragment">
+<div class="flex justify-center items-center h-16" th:fragment="HeaderFragment">
     <nav class="w-full">
         <div class="container mx-auto flex items-center justify-between h-24 relative">
             <!-- 왼쪽: 로고 + 설명 (세로 배치) -->
             <div class="flex flex-col items-center absolute left-1/2 transform -translate-x-1/2">
                 <a href="/" class="flex justify-center">
-                    <img src="/images/logo.png" alt="끼이익 - 수리비 예측" class="h-10 mb-1">
+                    <img src="/images/logo.png" alt="끼이익 - 수리비 예측"
+                         class="h-6 w-auto object-contain" style="max-height: 40px;">
                 </a>
                 <div class="text-sm font-semibold text-black">
                     사진으로 알아보는 차량 수리 견적, 끼이익

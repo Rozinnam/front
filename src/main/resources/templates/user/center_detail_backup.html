@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/layout}"
+      layout:fragment="content">
+<head>
+프로    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/center-detail.css}">
+</head>
+
+<body>
+<div class="center-detail-container">
+    <a href="javascript:history.back()" class="back-button">
+        ← 뒤로가기
+    </a>
+
+    <!-- 카센터 기본 정보 -->
+    <div class="center-header fade-in">
+        <div class="center-name" th:text="${serviceCenter.name}">카센터명</div>
+        <div class="center-rating">
+            <span class="star-rating">★★★★★</span>
+            <span class="rating-number" th:text="${serviceCenter.rating}">4.5</span>
+            <span class="review-count" th:text="'(' + ${#lists.size(serviceCenter.reviews)} + '개 리뷰)'">후기 수</span>
+        </div>
+
+        <div class="center-info-grid">
+            <div class="info-item">
+                <span class="info-icon">📍</span>
+                <div class="info-content">
+                    <div class="info-label">주소</div>
+                    <div class="info-value" th:text="${serviceCenter.address}">주소</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">📞</span>
+                <div class="info-content">
+                    <div class="info-label">전화번호</div>
+                    <div class="info-value" th:text="${serviceCenter.phoneNumber}">전화번호</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">🕒</span>
+                <div class="info-content">
+                    <div class="info-label">운영시간</div>
+                    <div class="info-value" th:text="${serviceCenter.operatingHours}">운영시간</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-description" th:if="${serviceCenter.description}">
+            <h4>🏢 카센터 소개</h4>
+            <p th:text="${serviceCenter.description}">카센터 설명</p>
+        </div>
+
+        <div class="contact-buttons">
+            <a th:href="'tel:' + ${serviceCenter.phoneNumber}" class="contact-btn call-btn">
+                📞 전화하기
+            </a>
+            <a th:href="'https://map.kakao.com/link/search/' + ${serviceCenter.name}"
+               class="contact-btn map-btn" target="_blank">
+                🗺️ 지도보기
+            </a>
+        </div>
+    </div>
+
+    <!-- 리뷰 섹션 -->
+    <div class="reviews-section fade-in">
+        <h3 class="section-title">고객 리뷰</h3>
+
+        <div th:if="${#lists.isEmpty(serviceCenter.reviews)}" class="empty-reviews">
+            <div class="icon">💬</div>
+            <h4>아직 등록된 리뷰가 없습니다</h4>
+            <p>첫 번째 리뷰를 남겨보세요!</p>
+        </div>
+
+        <div th:each="review : ${serviceCenter.reviews}" class="review-item">
+            <div class="review-header">
+                <div class="reviewer-info">
+                    <div class="reviewer-avatar" th:text="${#strings.substring(review.customerName, 0, 1)}">고</div>
+                    <span class="reviewer-name" th:text="${review.customerName}">고객명</span>
+                </div>
+                <span class="review-date" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">날짜</span>
+            </div>
+            <div class="review-rating">
+                <span class="star-rating">
+                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                          th:text="${i <= review.rating} ? '★' : '☆'">★</span>
+                </span>
+                <span class="rating-number" th:text="${review.rating}">평점</span>
+            </div>
+            <div class="review-comment" th:text="${review.comment}">리뷰 내용</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

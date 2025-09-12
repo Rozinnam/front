@@ -1,52 +1,146 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>끼이익, 사진으로 예상 수리비 알아보기</title>
-    <meta name="description" content="끼이익 - 사진으로 예상 수리비 알아보기">
-    <meta charset="UTF-8"
-          name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>자동차 수리비 견적 - AI 기반 즉시 견적</title>
+    <meta name="description" content="사진 업로드만으로 자동차 수리비를 즉시 확인하세요. AI 기반 정확한 견적 서비스">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="6L1jOoKQelZuEhumFD4dX8eIqOxA4q0yM-3tg7v96CA" />
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SSTGPB6N8R"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-SSTGPB6N8R');
     </script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Pretendard Font -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" rel="stylesheet">
+
+    <!-- Common Styles -->
+    <link rel="stylesheet" href="/css/common.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
     <style>
-        /* 헤더 색상 변경 */
-        header {
-            background-color: #343a40; /* 어두운 배경 색상 */
-            color: white; /* 텍스트 색상 */
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
         }
 
-        /* 본문 색상 변경 */
-        main {
-            background-color: #f8f9fa; /* 밝은 배경 색상 */
-            min-height: 400px; /* 최소 높이 설정 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Main content area */
+        .main-content {
+            min-height: 100vh; /* 헤더 높이 제외하지 않음 */
+            background-color: var(--bg-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                min-height: calc(100vh - 80px); /* 하단 네비게이션 높이만 제외 */
+                padding-bottom: 80px; /* 하단 네비게이션을 위한 여백 */
+            }
+        }
+
+        /* Remove default margins and paddings from common elements */
+        h1, h2, h3, h4, h5, h6, p, ul, ol, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        input, textarea, select {
+            font-family: inherit;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        a:focus {
+            outline-offset: 4px;
+        }
+
+        /* Loading states */
+        .loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Print styles */
+        @media print {
+            .bottom-nav,
+            .header-nav {
+                display: none !important;
+            }
         }
     </style>
 </head>
-<body>
-<!-- 헤더 영역 -->
-<header th:replace="common/fragment/header/header :: HeaderFragment"></header>
 
-<!-- 본문 영역 -->
-<main class="p-6 pt-5 bg-light">
-    <th:block layout:fragment="content"></th:block>
+<body>
+<header th:replace="common/fragment/header/header :: HeaderFragment"></header>
+<!-- Main Content -->
+<main class="main-content">
+    <div layout:fragment="content"></div>
 </main>
 
-<footer></footer>
+<!-- Global Scripts -->
+<script>
+    // Global error handler
+    window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+    });
+
+    // Add smooth scrolling for anchor links
+    document.addEventListener('DOMContentLoaded', function() {
+        const anchorLinks = document.querySelectorAll('a[href^="#"]');
+        anchorLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
