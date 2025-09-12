@@ -32,7 +32,6 @@ public class FeatureFlagService {
         redisTemplate.opsForValue().set(ENABLE_ASYNC_FILE_SERVICE, enable);
     }
 
-    @PostConstruct
     public void init() {
         Boolean value = redisTemplate.opsForValue().get(ENABLE_ASYNC_FILE_SERVICE);
         localCache.put(ENABLE_ASYNC_FILE_SERVICE, Objects.requireNonNullElse(value, true));
