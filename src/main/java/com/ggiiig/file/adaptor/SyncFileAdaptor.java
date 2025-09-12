@@ -6,7 +6,6 @@ import com.ggiiig.file.dto.response.ResponseDto;
 import com.ggiiig.file.exception.AiServerCommunicationException;
 import com.ggiiig.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
