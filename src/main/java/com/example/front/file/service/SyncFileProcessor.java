@@ -9,16 +9,14 @@ import com.example.front.util.CarRepairCostCalculator;
 import com.example.front.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Slf4j
-@Service
-@ConditionalOnProperty(name = "app.mode", havingValue = "sync", matchIfMissing = true)
+@Component
 @RequiredArgsConstructor
-public class SyncFileService implements FileService {
+public class SyncFileProcessor {
     private final SyncFileAdaptor syncFileAdaptor;
     private final FileUtils fileUtils;
 
