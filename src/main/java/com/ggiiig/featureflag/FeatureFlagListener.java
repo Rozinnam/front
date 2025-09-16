@@ -12,7 +12,7 @@ public class FeatureFlagListener {
         this.featureFlagService = featureFlagService;
     }
 
-    public void onMessage(String message, String channel) {
+    public void onMessage(String message) {
         boolean enabled = Boolean.parseBoolean(message);
         featureFlagService.updateFlag(enabled);
 
