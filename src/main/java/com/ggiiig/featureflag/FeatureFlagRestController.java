@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/feature")
 @Slf4j
 public class FeatureFlagRestController {
-    private final RedisTemplate<String, Boolean> redisTemplate;
-    private static final String CHANNEL = "feature_flag:async_file_service";
+    private final FeatureFlagService featureFlagService;
 
     @PostMapping("/{enabled}")
     public String setFlag(@PathVariable boolean enabled) {
-        redisTemplate.convertAndSend(CHANNEL, Boolean.toString(enabled));
+        featureFlagService.updateFlag(enabled);
         log.info("FeatureFlagRestController : Published = {}", enabled);
 
         return "Published " + enabled;
