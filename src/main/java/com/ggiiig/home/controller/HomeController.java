@@ -64,6 +64,7 @@ public class HomeController {
         model.addAttribute("result", result);
 
         if (featureFlagService.isEnableAsyncFileServiceMode()) {
+            model.addAttribute("taskId", result);
             return "user/result_async";
         }
 
