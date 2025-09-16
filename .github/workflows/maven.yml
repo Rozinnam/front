@@ -128,10 +128,11 @@ jobs:
 
       # 배포 완료 후 SG에서 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
+        if: always()
         run: |
           MY_IP=$(curl -s https://checkip.amazonaws.com)
           aws ec2 revoke-security-group-ingress \
             --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port ${{ secrets.SSH_PORT }} \
-            --cidr ${MY_IP}/32
+            --cidr ${MY_IP}/32 || true
