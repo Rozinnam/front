@@ -2,6 +2,7 @@ package com.ggiiig.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggiiig.webhook.dto.response.ResultDto;
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@lombok.extern.slf4j.Slf4j
+@Slf4j
 @RestController
 @RequestMapping("/sse")
 @RequiredArgsConstructor
@@ -41,7 +44,7 @@ public class SseRestController {
                 emitter.send(SseEmitter.event().data(objectMapper.writeValueAsString(result)));
                 emitter.complete();
             } catch (IOException e) {
-                emitter.completeWithError(e);
+                log.error(e.getMessage(), e);
             } finally {
                 emitters.remove(taskId);
             }
