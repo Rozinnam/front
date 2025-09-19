@@ -2,6 +2,7 @@ package com.ggiiig.home.controller;
 
 import com.ggiiig.annotation.CalculateTime;
 import com.ggiiig.center.service.ServiceCenterService;
+import com.ggiiig.featureflag.FeatureFlagService;
 import com.ggiiig.file.service.FileService;
 import com.ggiiig.pageview.entity.PageType;
 import com.ggiiig.pageview.service.PageViewCountService;
@@ -9,7 +10,6 @@ import com.ggiiig.part.domain.CarPart;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +23,8 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-    @Value("${app.mode}")
-    private String appMode;
-
     private final FileService fileService;
+    private final FeatureFlagService featureFlagService;
     private final PageViewCountService pageViewCountService;
     private final ServiceCenterService serviceCenterService;
 
@@ -63,24 +61,14 @@ public class HomeController {
         pageViewCountService.handleViewCount(getClientIP(request), PageType.RESULT);
 
         model.addAttribute("serviceCenters", serviceCenterService.getTopServiceCentersByRating());
+        model.addAttribute("result", result);
 
-        if (isSyncMode()) {
-            model.addAttribute("result", result);
-            return "user/result_sync";
-        } else if (isAsyncMode()) {
+        if (featureFlagService.isEnableAsyncFileServiceMode()) {
             model.addAttribute("taskId", result);
             return "user/result_async";
         }
 
-        throw new IllegalStateException("앱 모드 설정을 확인해주세요.");
-    }
-
-    private boolean isSyncMode() {
-        return appMode.equalsIgnoreCase("sync");
-    }
-
-    private boolean isAsyncMode() {
-        return appMode.equalsIgnoreCase("async");
+        return "user/result_sync";
     }
 
     private String getClientIP(HttpServletRequest request) {

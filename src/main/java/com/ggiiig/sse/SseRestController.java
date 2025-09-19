@@ -3,7 +3,6 @@ package com.ggiiig.sse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggiiig.webhook.dto.response.ResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequestMapping("/sse")
 @RequiredArgsConstructor
 public class SseRestController {

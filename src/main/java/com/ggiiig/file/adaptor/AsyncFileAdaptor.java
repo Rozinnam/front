@@ -6,7 +6,6 @@ import com.ggiiig.file.exception.AiServerCommunicationException;
 import com.ggiiig.file.exception.UnExpectedStateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import java.util.List;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(name = "app.mode", havingValue = "async")
 @RequiredArgsConstructor
 public class AsyncFileAdaptor {
     private final RestTemplate restTemplate;

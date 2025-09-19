@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Java CI with Maven
 
 on:
@@ -15,9 +7,63 @@ on:
     branches: [ "main" ]
 
 jobs:
+  # ----------------------------
+  # 1️⃣ Build & Test (CI)
+  # ----------------------------
   build:
-
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_USER_NAME: root
+      DB_PASSWORD: root
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # JDK 17 세팅
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # MySQL 세팅
+      - name: Start MySQL
+        uses: samin/mysql-action@v1
+
+      # Redis 세팅
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.1.0
+
+      # Maven 빌드 및 테스트
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      # Docker 로그인
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Docker 이미지 빌드 (중립적)
+      - name: Build the Docker image
+        run: docker build -t damho/front .
+
+      # Docker 이미지 푸시
+      - name: Push Docker image
+        run: docker push damho/front
+
+  # ----------------------------
+  # 2️⃣ Deploy to EC2
+  # ----------------------------
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
     env:
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
@@ -27,54 +73,6 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
-    - uses: actions/checkout@v4
-
-    # jdk 17 세팅
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-
-    # MySQL 세팅
-    - name: Start MySQL
-      uses: samin/mysql-action@v1
-
-    # Redis 세팅
-    - name: Start Redis
-      uses: supercharge/redis-github-action@1.1.0
-
-    # 패키징
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
-    # 도커 로그인
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    # 도커 이미지 빌드
-    - name: Build the Docker image
-      run: docker build -t damho/front .
-
-    # 도커 이미지 푸시
-    - name: push Docker image
-      run: docker push damho/front
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      # .env 파일 생성
-      #- name: Create .env file
-      #  run: |
-      #    echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > .env
-
-      # AWS 자격 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -82,7 +80,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_IAM_SECRET_KEY }}
           aws-region: ap-northeast-2
 
-      # 현재 GitHub Actions 워커의 IP 가져오기 및 보안 그룹에 추가
+      # 현재 GitHub Actions 워커 IP 가져오기 및 SG에 추가
       - name: Add GitHub Actions Runner IP to Security Group
         run: |
           MY_IP=$(curl -s https://checkip.amazonaws.com)
@@ -92,16 +90,17 @@ jobs:
             --port ${{ secrets.SSH_PORT }} \
             --cidr ${MY_IP}/32
 
-      # SSH를 통해 EC2에 접근하여 배포 수행
+      # EC2 접속 후 Docker 컨테이너 배포
       - name: SSH to EC2 and Deploy Docker Image
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.EC2_PUBLIC_IP }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.SSH_PORT}}
+          port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
+            # .env 파일 생성 (배포용 환경변수)
             echo "AI_MODEL_SERVER=${{ secrets.AI_MODEL_SERVER_ADDRESS }}" > /home/${{ secrets.EC2_USERNAME }}/.env
             echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
             echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
@@ -110,22 +109,30 @@ jobs:
             echo "DB_PORT=${{ secrets.DB_PORT }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
             echo "DB_USER_NAME=${{ secrets.DB_USER_NAME }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> /home/${{ secrets.EC2_USERNAME }}/.env
-            
+
+            # 기존 컨테이너 제거
             sudo docker stop front || true
             sudo docker rm front || true
             sudo docker rmi damho/front:latest || true
-            
-            sudo docker pull damho/front:latest
-            sudo docker run -e TZ=Asia/Seoul --env-file .env -d -p 8080:8080 --name front --network dockernetwork damho/front:latest 
 
-      # 작업 완료 후 보안 그룹에서 GitHub Actions 워커의 IP 제거
+            # 최신 이미지 풀 및 실행
+            sudo docker pull damho/front:latest
+            sudo docker run \
+              -e TZ=Asia/Seoul \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              --env-file .env \
+              -d -p 8080:8080 \
+              --name front \
+              --network dockernetwork \
+              damho/front:latest
+
+      # 배포 완료 후 SG에서 IP 제거
       - name: Remove GitHub Actions Runner IP from Security Group
+        if: always()
         run: |
           MY_IP=$(curl -s https://checkip.amazonaws.com)
-          echo "Removing Runner IP ${MY_IP} from Security Group"
           aws ec2 revoke-security-group-ingress \
             --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port ${{ secrets.SSH_PORT }} \
-            --cidr ${MY_IP}/32
-    
+            --cidr ${MY_IP}/32 || true

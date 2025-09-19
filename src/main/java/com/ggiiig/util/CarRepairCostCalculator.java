@@ -4,8 +4,6 @@ import com.ggiiig.file.dto.response.ResponseDto;
 import com.ggiiig.part.domain.CarPart;
 import com.ggiiig.webhook.dto.response.ResultDto;
 
-import java.text.DecimalFormat;
-
 import static org.springframework.web.util.HtmlUtils.htmlEscape;
 
 public class CarRepairCostCalculator {
@@ -44,8 +42,7 @@ public class CarRepairCostCalculator {
             throw new IllegalArgumentException("responseDto 또는 carPart 는 null 이 될 수 없습니다.");
         }
 
-        String rawMessage = generateMessage(responseDto, carPart);
-        return convertNewLineToBrTags(rawMessage);
+        return generateMessage(responseDto, carPart);
     }
 
     private static ResultDto generateData(ResponseDto responseDto, CarPart carPart) {
