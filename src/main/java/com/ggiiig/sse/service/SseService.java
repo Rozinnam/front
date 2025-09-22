@@ -1,34 +1,34 @@
-package com.ggiiig.sse;
+package com.ggiiig.sse.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggiiig.webhook.dto.response.ResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@RestController
-@RequestMapping("/sse")
+@Slf4j
+@Service
 @RequiredArgsConstructor
-public class SseRestController {
+public class SseService {
     private final ObjectMapper objectMapper;
     // 연결 관리용 맵
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    @GetMapping("/result/{taskId}")
-    public SseEmitter subscribe(@PathVariable String taskId) {
+    public SseEmitter subscribe(String taskId) {
         SseEmitter emitter = new SseEmitter(60 * 10000L);
 
         emitters.put(taskId, emitter);
 
         emitter.onCompletion(() -> emitters.remove(taskId));
-        emitter.onTimeout(() -> emitters.remove(taskId));
+        emitter.onTimeout(() -> {
+            emitters.remove(taskId);
+            log.error("{} timed out", taskId);
+        });
         emitter.onError(e -> emitters.remove(taskId));
 
         return emitter;
@@ -41,7 +41,7 @@ public class SseRestController {
                 emitter.send(SseEmitter.event().data(objectMapper.writeValueAsString(result)));
                 emitter.complete();
             } catch (IOException e) {
-                emitter.completeWithError(e);
+                log.error(e.getMessage(), e);
             } finally {
                 emitters.remove(taskId);
             }
