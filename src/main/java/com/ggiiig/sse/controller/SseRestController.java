@@ -1,5 +1,6 @@
-package com.ggiiig.sse;
+package com.ggiiig.sse.controller;
 
+import com.ggiiig.sse.service.SseService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,7 @@
 package com.ggiiig.webhook.service;
 
 import com.ggiiig.file.dto.response.ResponseDto;
-import com.ggiiig.sse.SseService;
+import com.ggiiig.sse.service.SseService;
 import com.ggiiig.util.CarRepairCostCalculator;
 import com.ggiiig.util.TaskCarPartRegistry;
 import com.ggiiig.webhook.dto.response.ResultDto;

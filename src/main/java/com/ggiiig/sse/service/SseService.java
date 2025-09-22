@@ -1,4 +1,4 @@
-package com.ggiiig.sse;
+package com.ggiiig.sse.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggiiig.webhook.dto.response.ResultDto;
