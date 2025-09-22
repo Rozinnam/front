@@ -1,6 +1,7 @@
 package com.ggiiig.webhook.service;
 
 import com.ggiiig.file.dto.response.ResponseDto;
+import com.ggiiig.part.domain.CarPart;
 import com.ggiiig.sse.service.SseService;
 import com.ggiiig.util.CarRepairCostCalculator;
 import com.ggiiig.util.TaskCarPartRegistry;
@@ -19,13 +20,18 @@ public class WebHookService {
 
     public ResponseEntity<String> receiveResult(ResponseDto responseDto) {
         String taskId = responseDto.getTaskId();
-
         if (taskId == null || taskId.isBlank()) {
             log.error("TaskId is null or empty");
             return ResponseEntity.badRequest().body("TaskId가 유효하지 않습니다.");
         }
 
-        ResultDto result = CarRepairCostCalculator.calculateForAsync(responseDto, taskCarPartRegistry.getCarPart(taskId));
+        CarPart carPart = taskCarPartRegistry.getCarPart(taskId);
+        if (carPart == null) {
+            log.error("CarPart not found for taskId: {}", taskId);
+            return ResponseEntity.badRequest().body("해당 작업을 찾을 수 없습니다.");
+        }
+
+        ResultDto result = CarRepairCostCalculator.calculateForAsync(responseDto, carPart);
 
         sseService.sendResult(taskId, result);
         log.info("결과 전송 완료: \n{}", taskId + result);
