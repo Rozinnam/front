@@ -28,7 +28,7 @@ public class AsyncFileAdaptor {
     private static final String URL = "/predict";
 
     @CalculateTime
-    public void communicateWithAiServer(List<MultipartFile> files, String taskId) {
+    public void callAiServer(List<MultipartFile> files, String taskId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();

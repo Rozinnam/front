@@ -16,11 +16,11 @@ public class DelegatingFileService implements FileService {
     private final FeatureFlagService featureFlagService;
 
     @Override
-    public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
+    public String estimateRepairCost(List<MultipartFile> files, CarPart carPart) {
         if (featureFlagService.isEnableAsyncFileServiceMode()) {
-            return asyncFileProcessor.communicateWithAiServer(files, carPart);
+            return asyncFileProcessor.prepareRequest(files, carPart);
         }
 
-        return syncFileProcessor.communicateWithAiServer(files, carPart);
+        return syncFileProcessor.prepareRequest(files, carPart);
     }
 }

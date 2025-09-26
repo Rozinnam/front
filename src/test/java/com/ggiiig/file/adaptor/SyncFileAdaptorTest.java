@@ -53,7 +53,7 @@ class SyncFileAdaptorTest {
                 eq(ResponseDto.class)
         )).thenReturn(responseEntity);
 
-        ResponseDto result = syncFileAdaptor.communicateWithAiServer(files);
+        ResponseDto result = syncFileAdaptor.callAiServer(files);
 
         assertEquals(fakeResponse, result);
     }
@@ -74,6 +74,6 @@ class SyncFileAdaptorTest {
                 eq(ResponseDto.class)
         )).thenReturn(responseEntity);
 
-        assertThrows(AiServerCommunicationException.class, () -> syncFileAdaptor.communicateWithAiServer(files));
+        assertThrows(AiServerCommunicationException.class, () -> syncFileAdaptor.callAiServer(files));
     }
 }

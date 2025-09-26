@@ -57,7 +57,7 @@ public class HomeController {
                          @RequestParam("selectedCarPart") CarPart carPart,
                          HttpServletRequest request,
                          Model model) {
-        String result = fileService.communicateWithAiServer(files, carPart);
+        String result = fileService.estimateRepairCost(files, carPart);
         pageViewCountService.handleViewCount(getClientIP(request), PageType.RESULT);
 
         model.addAttribute("serviceCenters", serviceCenterService.getTopServiceCentersByRating());

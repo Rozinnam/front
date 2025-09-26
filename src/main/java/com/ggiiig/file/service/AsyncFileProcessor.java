@@ -23,7 +23,7 @@ public class AsyncFileProcessor {
     private final FileUtils fileUtils;
     private final TaskCarPartRegistry taskCarPartRegistry;
 
-    public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
+    public String prepareRequest(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
         }
@@ -42,7 +42,7 @@ public class AsyncFileProcessor {
 
         String taskId = generateTaskId();
         taskCarPartRegistry.register(taskId, carPart);
-        asyncFileAdaptor.communicateWithAiServer(files, taskId);
+        asyncFileAdaptor.callAiServer(files, taskId);
         log.info("taskId : {}\n", taskId);
 
         return taskId;
