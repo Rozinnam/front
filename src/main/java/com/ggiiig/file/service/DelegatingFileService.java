@@ -1,6 +1,6 @@
 package com.ggiiig.file.service;
 
-import com.ggiiig.featureflag.FeatureFlagService;
+import com.ggiiig.featureflag.service.FeatureFlagService;
 import com.ggiiig.part.domain.CarPart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

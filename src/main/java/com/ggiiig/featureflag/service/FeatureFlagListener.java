@@ -1,4 +1,4 @@
-package com.ggiiig.featureflag;
+package com.ggiiig.featureflag.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.ggiiig.config;
 
-import com.ggiiig.featureflag.FeatureFlagListener;
+import com.ggiiig.featureflag.service.FeatureFlagListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

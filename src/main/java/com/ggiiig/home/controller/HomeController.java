@@ -2,7 +2,7 @@ package com.ggiiig.home.controller;
 
 import com.ggiiig.annotation.CalculateTime;
 import com.ggiiig.center.service.ServiceCenterService;
-import com.ggiiig.featureflag.FeatureFlagService;
+import com.ggiiig.featureflag.service.FeatureFlagService;
 import com.ggiiig.file.service.FileService;
 import com.ggiiig.pageview.entity.PageType;
 import com.ggiiig.pageview.service.PageViewCountService;
