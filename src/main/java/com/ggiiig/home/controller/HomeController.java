@@ -2,7 +2,7 @@ package com.ggiiig.home.controller;
 
 import com.ggiiig.annotation.CalculateTime;
 import com.ggiiig.center.service.ServiceCenterService;
-import com.ggiiig.featureflag.FeatureFlagService;
+import com.ggiiig.featureflag.service.FeatureFlagService;
 import com.ggiiig.file.service.FileService;
 import com.ggiiig.pageview.entity.PageType;
 import com.ggiiig.pageview.service.PageViewCountService;
@@ -57,7 +57,7 @@ public class HomeController {
                          @RequestParam("selectedCarPart") CarPart carPart,
                          HttpServletRequest request,
                          Model model) {
-        String result = fileService.communicateWithAiServer(files, carPart);
+        String result = fileService.estimateRepairCost(files, carPart);
         pageViewCountService.handleViewCount(getClientIP(request), PageType.RESULT);
 
         model.addAttribute("serviceCenters", serviceCenterService.getTopServiceCentersByRating());

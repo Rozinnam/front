@@ -27,7 +27,7 @@ public class SyncFileAdaptor {
     private static final String URL = "/predict";
 
     @CalculateTime
-    public ResponseDto communicateWithAiServer(List<MultipartFile> files) {
+    public ResponseDto callAiServer(List<MultipartFile> files) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();

@@ -6,5 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FileService {
-    String communicateWithAiServer(List<MultipartFile> files, CarPart carPart);
+    String estimateRepairCost(List<MultipartFile> files, CarPart carPart);
 }

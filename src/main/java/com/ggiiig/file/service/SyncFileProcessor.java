@@ -20,7 +20,7 @@ public class SyncFileProcessor {
     private final SyncFileAdaptor syncFileAdaptor;
     private final FileUtils fileUtils;
 
-    public String communicateWithAiServer(List<MultipartFile> files, CarPart carPart) {
+    public String prepareRequest(List<MultipartFile> files, CarPart carPart) {
         if (files == null || files.isEmpty()) {
             throw new FileEmptyException();
         }
@@ -37,7 +37,7 @@ public class SyncFileProcessor {
             log.info("fileName : {}\n", file.getOriginalFilename());
         }
 
-        return CarRepairCostCalculator.calculateForSync(syncFileAdaptor.communicateWithAiServer(files), carPart);
+        return CarRepairCostCalculator.calculateForSync(syncFileAdaptor.callAiServer(files), carPart);
     }
 
 }
