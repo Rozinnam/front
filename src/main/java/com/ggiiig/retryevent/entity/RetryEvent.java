@@ -45,8 +45,16 @@ public class RetryEvent {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void process() {
+    public void startProcessing() {
+        this.status = Status.PROCESSING;
+    }
+
+    public void complete() {
         this.status = Status.COMPLETED;
         this.processedAt = LocalDateTime.now();
+    }
+
+    public void resetToPending() {
+        this.status = Status.PENDING;
     }
 }

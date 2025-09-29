@@ -9,5 +9,5 @@ import java.util.List;
 
 @Component
 public interface RetryEventRepository extends JpaRepository<RetryEvent, Integer> {
-    List<RetryEvent> findByStatus(Status status);
+    List<RetryEvent> findByStatusIn(List<Status> statuses);
 }

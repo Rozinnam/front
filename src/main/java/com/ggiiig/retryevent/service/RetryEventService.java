@@ -35,14 +35,16 @@ public class RetryEventService {
 
         while ((retryEvent = retryEventMQRepository.poll()) != null) {
             try {
+                retryEvent.startProcessing();
                 key =  retryEvent.getKey();
                 value = retryEvent.getValue();
                 featureFlagRedisRepository.safeSet(key, value);
 
-                retryEvent.process();
+                retryEvent.complete();
                 retryEventRepository.save(retryEvent);
             } catch (Exception e) {
                 log.error("재시도 실패, {}", retryEvent);
+                retryEvent.resetToPending();
                 retryEventMQRepository.offer(retryEvent);
             }
         }
@@ -50,7 +52,7 @@ public class RetryEventService {
 
     @PostConstruct
     public void getRetryEventFromDatabase() {
-        List<RetryEvent> retryEvents = retryEventRepository.findByStatus(Status.PENDING);
+        List<RetryEvent> retryEvents = retryEventRepository.findByStatusIn(List.of(Status.PENDING, Status.PROCESSING));
         retryEvents.sort(Comparator.comparing(RetryEvent::getRetryEventId));
         retryEventMQRepository.offer(retryEvents);
     }
