@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public interface RetryEventRepository extends JpaRepository<RetryEvent, Integer> {
     List<RetryEvent> findByStatusIn(List<Status> statuses);
 }
