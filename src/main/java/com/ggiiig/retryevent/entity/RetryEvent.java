@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "retry_event")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class RetryEvent {
     @Id
