@@ -46,7 +46,7 @@ public class RetryEvent {
     }
 
     public void process() {
-        this.status = Status.PROCESSED;
+        this.status = Status.COMPLETED;
         this.processedAt = LocalDateTime.now();
     }
 }
