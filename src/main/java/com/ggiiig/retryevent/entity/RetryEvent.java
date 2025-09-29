@@ -3,14 +3,16 @@ package com.ggiiig.retryevent.entity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@Table(name = "retry_event")
 @Getter
+@NoArgsConstructor
 public class RetryEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
