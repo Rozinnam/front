@@ -14,27 +14,27 @@ import java.time.LocalDateTime;
 public class RetryEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "retry_event_id")
     private Integer retryEventId;
 
-    @Column(name = "key")
+    @Column(name = "retry_event_key")
     @NotNull
     private String key;
 
-    @Column(name = "value")
+    @Column(name = "retry_event_value")
     @NotNull
     private Boolean value;
 
-    @Column(name = "status")
+    @Column(name = "retry_event_status")
     @Enumerated(EnumType.STRING)
     @NotNull
     private Status status;
 
-    @Column(name = "created_at")
+    @Column(name = "retry_event_created_at")
     @NotNull
     private LocalDateTime createdAt;
 
-    @Column(name = "processed_at")
+    @Column(name = "retry_event_processed_at")
     @Nullable
     private LocalDateTime processedAt;
 
